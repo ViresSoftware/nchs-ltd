@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import logo from "@/public/logo.png";
-import { Menu, X } from "lucide-react"; // for toggle icons
+import { Menu, X, Lock } from "lucide-react"; // for toggle icons
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -42,11 +42,12 @@ export default function Header() {
         </nav>
 
         {/* Secure Login (Desktop) */}
-        <Link href="/login" className="ml-4 hidden md:inline-block">
-          <Button variant="outline" size="sm">
-            Secure Login
-          </Button>
-        </Link>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/login" className="ml-4 hidden md:inline-flex flex-row">
+            <span>Secure Login</span>
+            <Lock size={18} className="ml-2" />
+          </Link>
+        </Button>
 
         {/* Mobile Menu Toggle */}
         <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
@@ -62,11 +63,12 @@ export default function Header() {
           <Link href="#commodities" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Offerings</Link>
           <Link href="#privacy" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Protocols</Link>
           <Link href="#contact" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Inquiry</Link>
-          <Link href="/login" className="block">
-            <Button variant="outline" size="lg" className="w-full">
-              Secure Login
-            </Button>
-          </Link>
+          <Button variant="outline" size="lg" className="w-full justify-between" asChild>
+            <Link href="/login" className="flex justify-between w-full items-center">
+              <span>Secure Login</span>
+              <Lock size={18} className="ml-2" />
+            </Link>
+          </Button>
         </div>
       )}
     </header>

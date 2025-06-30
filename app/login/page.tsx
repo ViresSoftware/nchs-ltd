@@ -1,6 +1,5 @@
 import Hero from "@/components/hero";
-import Company from "@/components/company";
-import Stats from "@/components/stats";
+import Company from "@/components/company"; 
 import Commodities from "@/components/commodities";
 import Privacy from "@/components/privacy";
 import ContactForm from "@/components/contact";
@@ -10,7 +9,6 @@ export default function Home() {
     <>
       <Hero />
       <Company />
-      <Stats />
       <Commodities />
       <Privacy />
       <ContactForm />

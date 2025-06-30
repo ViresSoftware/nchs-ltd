@@ -18,7 +18,6 @@ export default function Privacy() {
           Your trust is protected under institutional-grade security and legal compliance.
         </p>
       </div>
-
       <div className="grid gap-4 lg:gap-6 md:grid-cols-3 max-w-6xl mx-auto">
         <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-2 lg:py-6 shadow-sm">
           <CardContent className="p-6 space-y-2">
@@ -28,7 +27,6 @@ export default function Privacy() {
             </p>
           </CardContent>
         </Card>
-
         <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-2 lg:py-6 shadow-sm">
           <CardContent className="p-6 space-y-2">
             <h3 className="font-semibold text-base font-playfair">COMPLIANCE & SECURITY</h3>
@@ -37,7 +35,6 @@ export default function Privacy() {
             </p>
           </CardContent>
         </Card>
-
         <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-2 lg:py-6 shadow-sm">
           <CardContent className="p-6 space-y-2">
             <h3 className="font-semibold text-base font-playfair">LEGAL NOTICE</h3>
