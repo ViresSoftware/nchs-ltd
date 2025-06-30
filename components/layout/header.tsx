@@ -28,17 +28,17 @@ export default function Header() {
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-0">
         {/* Logo */}
-        <Link href="#hero" scroll={true} className="flex items-center space-x-2">
+        <Link href="/#hero" scroll={true} className="flex items-center space-x-2">
           <Image src={logo} alt="NCHS LTD Logo" width={100} height={40} priority />
         </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-          <Link href="#hero" scroll={true} className="hover:text-[#b28f3f]">Home</Link>
-          <Link href="#company" scroll={true} className="hover:text-[#b28f3f]">About</Link>
-          <Link href="#commodities" scroll={true} className="hover:text-[#b28f3f]">Offerings</Link>
-          <Link href="#privacy" scroll={true} className="hover:text-[#b28f3f]">Protocols</Link>
-          <Link href="#contact" scroll={true} className="hover:text-[#b28f3f]">Inquiry</Link>
+          <Link href="/#hero" scroll={true} className="hover:text-[#b28f3f]">Home</Link>
+          <Link href="/about" scroll={true} className="hover:text-[#b28f3f]">About</Link>
+          <Link href="/#commodities" scroll={true} className="hover:text-[#b28f3f]">Offerings</Link>
+          <Link href="/#privacy" scroll={true} className="hover:text-[#b28f3f]">Protocols</Link>
+          <Link href="/#contact" scroll={true} className="hover:text-[#b28f3f]">Inquiry</Link>
         </nav>
 
         {/* Secure Login (Desktop) */}
@@ -58,11 +58,11 @@ export default function Header() {
       {/* Mobile Nav */}
       {menuOpen && (
         <div className="md:hidden text-white px-6 pb-4 space-y-4 font-medium">
-          <Link href="#hero" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Home</Link>
-          <Link href="#company" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>About</Link>
-          <Link href="#commodities" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Offerings</Link>
-          <Link href="#privacy" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Protocols</Link>
-          <Link href="#contact" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Inquiry</Link>
+          <Link href="/#hero" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Home</Link>
+          <Link href="/about" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>About</Link>
+          <Link href="/#commodities" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Offerings</Link>
+          <Link href="/#privacy" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Protocols</Link>
+          <Link href="/#contact" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Inquiry</Link>
           <Button variant="outline" size="lg" className="w-full justify-between" asChild>
             <Link href="/login" className="flex justify-between w-full items-center">
               <span>Secure Login</span>
