@@ -275,7 +275,7 @@ export default function CISForm() {
           {step > 0 && <Button type="button" variant="outline" onClick={backStep}>Back</Button>}
 
           {step < 6 ? (
-            <Button type="button" onClick={nextStep}>Next</Button>
+            <Button className='ml-auto' type="button" onClick={nextStep}>Next</Button>
           ) : (
             <Button type="submit">Submit</Button>
           )}
