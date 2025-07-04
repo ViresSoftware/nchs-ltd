@@ -4,12 +4,15 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import logo from "@/public/logo.png";
 import { Menu, X, Lock } from "lucide-react"; // for toggle icons
+import LoginForm from "../form/Login";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,11 +72,14 @@ export default function Header() {
         </nav>
 
         {/* Secure Login (Desktop) */}
-        <Button variant="outline" size="sm" asChild className="bg-black">
-          <Link href="/login" className="ml-4 hidden md:inline-flex flex-row">
-            <span>Secure Login</span>
-            <Lock size={18} className="ml-2" />
-          </Link>
+        <Button
+          variant="outline"
+          size="sm"
+          className="bg-black ml-4 hidden md:inline-flex flex-row items-center justify-between"
+          onClick={() => setLoginDialogOpen(true)}
+        >
+          <span>Secure Login</span>
+          <Lock size={18} className="ml-2" />
         </Button>
 
         {/* Mobile Menu Toggle */}
@@ -90,14 +96,27 @@ export default function Header() {
           <Link href="#commodities" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Offerings</Link>
           <Link href="#privacy" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Protocols</Link>
           <Link href="#contact" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Inquiry</Link>
-          <Button variant="outline" size="lg" className="w-full justify-between bg-black" asChild>
-            <Link href="/login" className="flex justify-between w-full items-center">
-              <span>Secure Login</span>
-              <Lock size={18} className="ml-2" />
-            </Link>
+          <Button
+            variant="outline"
+            size="lg"
+            className="bg-black w-full justify-between"
+            onClick={() => setLoginDialogOpen(true)}
+          >
+            <span>Secure Login</span>
+            <Lock size={18} className="ml-2" />
           </Button>
         </div>
       )}
+
+      <Dialog open={loginDialogOpen} onOpenChange={setLoginDialogOpen}>
+        <DialogContent className="bg-black text-white border border-gray-700">
+          <DialogHeader>
+            <DialogTitle>Secure Login</DialogTitle>
+            <DialogDescription>Enter your credentials to access your account.</DialogDescription>
+          </DialogHeader>
+          <LoginForm />
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }
