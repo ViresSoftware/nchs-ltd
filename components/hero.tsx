@@ -1,6 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Lock, LockOpen } from 'lucide-react';
+import './hero.css';
 
 export default function Hero() {
   return (
@@ -35,11 +37,11 @@ export default function Hero() {
         <p className="md:text-lg md:text-xl mb-6">
           Private Access to the World’s Most Valuable Assets — Secured, Verified, Confidential.
         </p>
-        <a href="#contact">
-          <Button variant="default" className="bg-[#b28f3f] hover:bg-[#b28f3f] text-black hover:opacity-90">
-            Initiate Private Inquiry
-          </Button>
-        </a>
+        <Link href="#contact" className="neon-gold-btn">
+          <Lock className="locked h-5 w-5 mr-2"/>
+          <LockOpen className="unlocked h-5 w-5 mr-2"/>
+          <span>Private Inquiry</span>
+        </Link>
       </div>
 
       {/* Optional dark overlay */}

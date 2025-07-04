@@ -131,3 +131,7 @@
     @apply bg-background text-white;
   }
 }
+
+.bg-card {
+    background-color: #171717;
+}

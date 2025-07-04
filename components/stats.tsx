@@ -1,8 +1,8 @@
-
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 interface Stat {
   value: number;
@@ -55,16 +55,18 @@ export default function Stats() {
   return (
     <section 
       id="stats"
-      className="py-10 lg:py-20 px-4 bg-card"
+      className="py-10 lg:py-20 px-4 bg-black relative bg-[url('/dot-grid-pattern.png')] bg-repeat"
+      style={{ backgroundSize: '64px' }}
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="absolute inset-0 bg-black/50 z-0" />
+      <div className="max-w-6xl mx-auto relative z-10">
         <div className="max-w-4xl mx-auto text-center mb-10">
           <h2 className="text-3xl font-playfair mb-4">Company Stats</h2>
           <p className="text-sm">Our Results</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-3">
           {STATS.map((stat) => (
-            <Card key={stat.label} className="text-center">
+            <Card key={stat.label} className="text-center bg-gray-900 text-white border-0">
               <CardHeader>
                 <CardTitle className="text-4xl font-bold">
                   <AnimatedNumber target={stat.value} />
@@ -72,7 +74,7 @@ export default function Stats() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground capitalize">{stat.label}</p>
+                <p className="text-muted-foreground capitalize text-white">{stat.label}</p>
               </CardContent>
             </Card>
           ))}

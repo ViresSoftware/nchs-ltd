@@ -1,7 +1,12 @@
+
+import PageHeader from "@/components/page/header";
 import AboutNCHS from "@/components/about";
 
 export default function Home() {
 	return (
-		<AboutNCHS/>
+		<>
+			<PageHeader title="About" backgroundImage="/american-eagle-dubai-skyline.jpg" description="We are a specialized, multi-sector firm focused on the acquisition, management, and strategic structuring of high-value commodities and advanced infrastructure assets."/>
+			<AboutNCHS/>
+		</>
 	)
 }

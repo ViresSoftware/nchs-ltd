@@ -24,9 +24,15 @@ export default function ContactForm() {
           <p className="text-green-500">Your message has been received. We respond only to verified parties.</p>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6 text-left">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input id="name" type="text" required placeholder="John Doe" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="first-name">First Name</Label>
+                <Input id="first-name" type="text" required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="last-name">Last Name</Label>
+                <Input id="last-name" type="text" required />
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -39,7 +45,7 @@ export default function ContactForm() {
               <Textarea id="message" required placeholder="Your confidential inquiry..."  className="h-30" />
             </div>
 
-            <Button variant="outline" type="submit" size="lg" className="w-full">
+            <Button variant="outline" type="submit" size="lg" className="w-full text-black">
               Send Secure Message
             </Button>
           </form>

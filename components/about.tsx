@@ -6,11 +6,10 @@ export default function AboutNCHS() {
       className="py-20 lg:py-20 lg:pt-30 px-4"
     >
       <div className="max-w-6xl mx-auto space-y-6">
-        <h2 className="text-3xl font-playfair text-center">About NCHS LTD</h2>
+        {/* <h2 className="text-3xl font-playfair text-center">About NCHS LTD</h2> */}
         <p className="text-center text-sm uppercase tracking-wide text-muted-foreground">
           Cayman Islands Registered | Private Sector Holdings | Global Strategic Assets
         </p>
-
         <p>
           NCHS LTD is a privately registered Cayman Islands enterprise operating across the global private sector with precision, confidentiality, and institutional integrity. We are a specialized, multi-sector firm focused on the acquisition, management, and strategic structuring of high-value commodities and advanced infrastructure assets.
         </p>
@@ -20,9 +19,7 @@ export default function AboutNCHS() {
         <p>
           NCHS LTD is positioned to deliver in environments that demand zero public exposure, operational resilience, and verified asset protocols.
         </p>
-
         <h3 className="text-2xl font-playfair mt-10">Our Focus Areas</h3>
-
         <h4 className="text-lg font-semibold font-playfair mt-6">Precious Metals & Asset-Backed Instruments</h4>
         <p>
           We facilitate secure acquisition, movement, and custodial structuring of physical gold bullion and Dore bars, sourced exclusively through validated, high-security channels.

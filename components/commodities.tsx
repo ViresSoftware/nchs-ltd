@@ -44,7 +44,7 @@ export default function Commodities() {
           </Card>
 
           <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-6 shadow-sm">
-            <CardContent className="p-6 space-y-2">
+            <CardContent className="p-6 space-y-2 text-white">
               <h3 className="text-md md:text-xl font-semibold font-playfair">Gold & Asset-Backed Instruments</h3>
               <p className="text-sm">
                 Bullion, Dore Bars, and structured private gold-backed financial vehicles.
@@ -53,7 +53,7 @@ export default function Commodities() {
           </Card>
 
           <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-6 shadow-sm">
-            <CardContent className="p-6 space-y-2">
+            <CardContent className="p-6 space-y-2 text-white">
               <h3 className="text-md md:text-xl font-semibold font-playfair">Cryptocurrency</h3>
               <p className="text-sm">
                 BTC block trades, USDT/USDC transactions via private execution desks.
@@ -62,7 +62,7 @@ export default function Commodities() {
           </Card>
 
           <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-6 shadow-sm">
-            <CardContent className="p-6 space-y-2">
+            <CardContent className="p-6 space-y-2 text-white">
               <h3 className="text-md md:text-xl font-semibold font-playfair">Fine Art</h3>
               <p className="text-sm">
                 Discreet acquisition/sale of investment-grade Tier 1 global artworks.

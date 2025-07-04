@@ -10,39 +10,41 @@ export default function Privacy() {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
-      className="py-10 lg:py-20 px-4 bg-card"
+      className="py-10 lg:py-20 px-4 bg-card relative bg-[url('/dot-grid-pattern.png')] bg-repeat"
+      style={{ backgroundSize: '64px' }}
     >
-      <div className="max-w-4xl mx-auto text-center mb-10">
+      <div className="absolute inset-0 bg-black/50 z-0" />
+      <div className="max-w-4xl mx-auto text-center mb-10 relative z-10">
         <h2 className="text-3xl font-playfair mb-4">Privacy Protocols & Disclaimers</h2>
-        <p className="text-sm">
+        <p className="text-sm mb-4">
           Your trust is protected under institutional-grade security and legal compliance.
         </p>
-      </div>
-      <div className="grid gap-4 lg:gap-6 md:grid-cols-3 max-w-6xl mx-auto">
-        <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-2 lg:py-6 shadow-sm">
-          <CardContent className="p-6 space-y-2">
-            <h3 className="font-semibold text-base font-playfair">CONFIDENTIALITY NOTICE</h3>
-            <p className="text-sm">
-              This site and all communications are monitored. Unauthorized access or misrepresentation is strictly prohibited.
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-2 lg:py-6 shadow-sm">
-          <CardContent className="p-6 space-y-2">
-            <h3 className="font-semibold text-base font-playfair">COMPLIANCE & SECURITY</h3>
-            <p className="text-sm">
-              We follow strict global compliance protocols (AML/KYC/Asset verification).
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-2 lg:py-6 shadow-sm">
-          <CardContent className="p-6 space-y-2">
-            <h3 className="font-semibold text-base font-playfair">LEGAL NOTICE</h3>
-            <p className="text-sm">
-              Fraudulent activity will be reported to the FBI, SEC, INTERPOL, and relevant authorities.
-            </p>
-          </CardContent>
-        </Card>
+        <div className="grid gap-4 lg:gap-6 md:grid-cols-3 max-w-6xl mx-auto">
+          <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-2 lg:py-6 shadow-sm">
+            <CardContent className="p-6 space-y-2 text-white">
+              <h3 className="font-semibold text-base font-playfair">CONFIDENTIALITY NOTICE</h3>
+              <p className="text-sm">
+                This site and all communications are monitored. Unauthorized access or misrepresentation is strictly prohibited.
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-2 lg:py-6 shadow-sm">
+            <CardContent className="p-6 space-y-2 text-white">
+              <h3 className="font-semibold text-base font-playfair">COMPLIANCE & SECURITY</h3>
+              <p className="text-sm">
+                We follow strict global compliance protocols (AML/KYC/Asset verification).
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-2 lg:py-6 shadow-sm">
+            <CardContent className="p-6 space-y-2 text-white">
+              <h3 className="font-semibold text-base font-playfair">LEGAL NOTICE</h3>
+              <p className="text-sm">
+                Fraudulent activity will be reported to the FBI, SEC, INTERPOL, and relevant authorities.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </motion.section>
   );
