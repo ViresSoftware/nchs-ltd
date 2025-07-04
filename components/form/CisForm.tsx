@@ -1,0 +1,239 @@
+'use client'
+
+import { useState } from 'react'
+import { useForm, FormProvider } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+
+const schema = z.object({
+  // Step 0
+  company_name: z.string().min(1, 'Required'),
+  mailing_address: z.string().min(1, 'Required'),
+  country_registered: z.string().min(1, 'Required'),
+  registration_number: z.string().min(1, 'Required'),
+  website: z.string().url('Invalid URL'),
+
+  // Step 1
+  authorized_name: z.string().min(1, 'Required'),
+  title: z.string().min(1, 'Required'),
+  auth_email: z.string().email('Invalid email'),
+  passport_number: z.string().min(1, 'Required'),
+
+  // Step 2
+  bank_name: z.string().min(1, 'Required'),
+  bank_address: z.string().min(1, 'Required'),
+  bank_account_number: z.string().min(1, 'Required'),
+  iban: z.string().min(1, 'Required'),
+  bank_officer_email: z.string().email('Invalid email'),
+
+  // Step 3
+  lawyer_name: z.string().min(1, 'Required'),
+  lawyer_email: z.string().email('Invalid email'),
+  contact_name: z.string().min(1, 'Required'),
+  contact_email: z.string().email('Invalid email'),
+
+  // Step 4
+  description: z.string().min(1, 'Required'),
+
+  // Step 5
+  declaration_name: z.string().min(1, 'Required'),
+  declaration_company: z.string().min(1, 'Required'),
+  declaration_passport: z.string().min(1, 'Required'),
+
+  // Step 6
+  passport_file: z
+    .any()
+    .refine((file) => file instanceof File, { message: 'Passport file is required' }),
+  certificate_file: z
+    .any()
+    .refine((file) => file instanceof File, { message: 'Certificate file is required' }),
+})
+
+type FormSchema = z.infer<typeof schema>
+
+export default function CISForm() {
+  const [step, setStep] = useState(0)
+  const methods = useForm<FormSchema>({
+    resolver: zodResolver(schema),
+    mode: 'onTouched',
+  })
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    trigger,
+  } = methods
+
+  const stepFields: Record<number, (keyof FormSchema)[]> = {
+    0: ['company_name', 'mailing_address', 'country_registered', 'registration_number', 'website'],
+    1: ['authorized_name', 'title', 'auth_email', 'passport_number'],
+    2: ['bank_name', 'bank_address', 'bank_account_number', 'iban', 'bank_officer_email'],
+    3: ['lawyer_name', 'lawyer_email', 'contact_name', 'contact_email'],
+    4: ['description'],
+    5: ['declaration_name', 'declaration_company', 'declaration_passport'],
+    6: ['passport_file', 'certificate_file'],
+  }
+
+  const onSubmit = (data: FormSchema) => {
+    console.log('Submitted:', data)
+    alert('✅ Form submitted successfully!')
+  }
+
+  const nextStep = async () => {
+    const valid = await trigger(stepFields[step])
+    if (valid) setStep((s) => s + 1)
+  }
+
+  const backStep = () => setStep((s) => Math.max(0, s - 1))
+
+  return (
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto p-6 space-y-6">
+        <h2 className="text-2xl font-bold">Step {step + 1}</h2>
+
+        {/* Step Content */}
+        {step === 0 && (
+          <>
+            <Label>Company Name</Label>
+            <Input {...register('company_name')} />
+            {errors.company_name && <p className="text-red-500">{errors.company_name.message}</p>}
+
+            <Label>Mailing Address</Label>
+            <Input {...register('mailing_address')} />
+            {errors.mailing_address && <p className="text-red-500">{errors.mailing_address.message}</p>}
+
+            <Label>Country Registered</Label>
+            <Input {...register('country_registered')} />
+            {errors.country_registered && <p className="text-red-500">{errors.country_registered.message}</p>}
+
+            <Label>Registration Number</Label>
+            <Input {...register('registration_number')} />
+            {errors.registration_number && <p className="text-red-500">{errors.registration_number.message}</p>}
+
+            <Label>Website</Label>
+            <Input {...register('website')} />
+            {errors.website && <p className="text-red-500">{errors.website.message}</p>}
+          </>
+        )}
+
+        {step === 1 && (
+          <>
+            <Label>Authorized Name</Label>
+            <Input {...register('authorized_name')} />
+            {errors.authorized_name && <p className="text-red-500">{errors.authorized_name.message}</p>}
+
+            <Label>Title</Label>
+            <Input {...register('title')} />
+            {errors.title && <p className="text-red-500">{errors.title.message}</p>}
+
+            <Label>Email</Label>
+            <Input {...register('auth_email')} />
+            {errors.auth_email && <p className="text-red-500">{errors.auth_email.message}</p>}
+
+            <Label>Passport Number</Label>
+            <Input {...register('passport_number')} />
+            {errors.passport_number && <p className="text-red-500">{errors.passport_number.message}</p>}
+          </>
+        )}
+
+        {step === 2 && (
+          <>
+            <Label>Bank Name</Label>
+            <Input {...register('bank_name')} />
+            {errors.bank_name && <p className="text-red-500">{errors.bank_name.message}</p>}
+
+            <Label>Bank Address</Label>
+            <Input {...register('bank_address')} />
+            {errors.bank_address && <p className="text-red-500">{errors.bank_address.message}</p>}
+
+            <Label>Account Number</Label>
+            <Input {...register('bank_account_number')} />
+            {errors.bank_account_number && <p className="text-red-500">{errors.bank_account_number.message}</p>}
+
+            <Label>IBAN</Label>
+            <Input {...register('iban')} />
+            {errors.iban && <p className="text-red-500">{errors.iban.message}</p>}
+
+            <Label>Bank Officer Email</Label>
+            <Input {...register('bank_officer_email')} />
+            {errors.bank_officer_email && <p className="text-red-500">{errors.bank_officer_email.message}</p>}
+          </>
+        )}
+
+        {step === 3 && (
+          <>
+            <Label>Lawyer Name</Label>
+            <Input {...register('lawyer_name')} />
+            {errors.lawyer_name && <p className="text-red-500">{errors.lawyer_name.message}</p>}
+
+            <Label>Lawyer Email</Label>
+            <Input {...register('lawyer_email')} />
+            {errors.lawyer_email && <p className="text-red-500">{errors.lawyer_email.message}</p>}
+
+            <Label>Contact Name</Label>
+            <Input {...register('contact_name')} />
+            {errors.contact_name && <p className="text-red-500">{errors.contact_name.message}</p>}
+
+            <Label>Contact Email</Label>
+            <Input {...register('contact_email')} />
+            {errors.contact_email && <p className="text-red-500">{errors.contact_email.message}</p>}
+          </>
+        )}
+
+        {step === 4 && (
+          <>
+            <Label>Business Description</Label>
+            <Textarea {...register('description')} />
+            {errors.description && <p className="text-red-500">{errors.description.message}</p>}
+          </>
+        )}
+
+        {step === 5 && (
+          <>
+            <Label>Declaration Name</Label>
+            <Input {...register('declaration_name')} />
+            {errors.declaration_name && <p className="text-red-500">{errors.declaration_name.message}</p>}
+
+            <Label>Company</Label>
+            <Input {...register('declaration_company')} />
+            {errors.declaration_company && <p className="text-red-500">{errors.declaration_company.message}</p>}
+
+            <Label>Passport Number</Label>
+            <Input {...register('declaration_passport')} />
+            {errors.declaration_passport && <p className="text-red-500">{errors.declaration_passport.message}</p>}
+          </>
+        )}
+
+        {step === 6 && (
+          <>
+            <Label>Attach Passport</Label>
+            <Input type="file" onChange={(e) => setValue('passport_file', e.target.files?.[0])} />
+            {errors.passport_file && <p className="text-red-500">{errors.passport_file.message}</p>}
+
+            <Label>Attach Certificate</Label>
+            <Input type="file" onChange={(e) => setValue('certificate_file', e.target.files?.[0])} />
+            {errors.certificate_file && <p className="text-red-500">{errors.certificate_file.message}</p>}
+          </>
+        )}
+
+        {/* Navigation Buttons */}
+        <div className="flex justify-between pt-4">
+          {step > 0 && <Button type="button" variant="outline" onClick={backStep}>Back</Button>}
+
+          {step < 6 ? (
+            <Button type="button" onClick={nextStep}>Next</Button>
+          ) : (
+            <Button type="submit">Submit</Button>
+          )}
+        </div>
+      </form>
+    </FormProvider>
+  )
+}
