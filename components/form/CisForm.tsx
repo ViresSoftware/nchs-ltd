@@ -47,11 +47,12 @@ const schema = z.object({
 
   // Step 6
   passport_file: z
-    .any()
-    .refine((file) => file instanceof File, { message: 'Passport file is required' }),
-  certificate_file: z
-    .any()
-    .refine((file) => file instanceof File, { message: 'Certificate file is required' }),
+  .instanceof(File, { message: 'Passport file is required' })
+  .refine((file) => file.size < 5 * 1024 * 1024, 'Passport file must be under 5MB'),
+
+	certificate_file: z
+		.instanceof(File, { message: 'Certificate file is required' })
+		.refine((file) => file.size < 5 * 1024 * 1024, 'Certificate file must be under 5MB'),
 })
 
 type FormSchema = z.infer<typeof schema>
@@ -258,13 +259,29 @@ export default function CISForm() {
           <>
             <div>
 							<Label>Attach Passport</Label>
-            	<Input type="file" onChange={(e) => setValue('passport_file', e.target.files?.[0])} />
+            	<Input
+								type="file"
+								onChange={(e) => {
+									const file = e.target.files?.[0]
+									if (file) {
+										setValue('passport_file', file)
+									}
+								}}
+							/>
             	{errors.passport_file && <p className="text-red-500">	{errors.passport_file.message}</p>}
 						</div>
 
             <div>
 							<Label>Attach Certificate</Label>
-            	<Input type="file" onChange={(e) => setValue('certificate_file', e.target.files?.[0])} />
+            	<Input
+								type="file"
+								onChange={(e) => {
+									const file = e.target.files?.[0]
+									if (file) {
+										setValue('certificate_file', file)
+									}
+								}}
+							/>
             	{errors.certificate_file && <p className="text-red-500">	{errors.certificate_file.message}</p>}
 						</div>
           </>
