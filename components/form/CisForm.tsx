@@ -100,126 +100,173 @@ export default function CISForm() {
 
         {/* Step Content */}
         {step === 0 && (
-          <>
-            <Label>Company Name</Label>
-            <Input {...register('company_name')} />
-            {errors.company_name && <p className="text-red-500">{errors.company_name.message}</p>}
+          <div className='space-y-6'>
+						<div>
+							<Label>Company Name</Label>
+							<Input className='mt-3 mb-1' {...register('company_name')} />
+							{errors.company_name && <p className="text-red-500">	{errors.company_name.message}</p>}
+						</div>
+            <div>
+							<Label>Mailing Address</Label>
+            	<Input className='mt-3 mb-1' {...register('mailing_address')} />
+            	{errors.mailing_address && <p className="text-red-500">	{errors.mailing_address.message}</p>}
+						</div>
 
-            <Label>Mailing Address</Label>
-            <Input {...register('mailing_address')} />
-            {errors.mailing_address && <p className="text-red-500">{errors.mailing_address.message}</p>}
+            <div>
+							<Label>Country Registered</Label>
+            	<Input className='mt-3 mb-1' {...register('country_registered')} />
+            	{errors.country_registered && <p className="text-red-500">	{errors.country_registered.message}</p>}
+						</div>
 
-            <Label>Country Registered</Label>
-            <Input {...register('country_registered')} />
-            {errors.country_registered && <p className="text-red-500">{errors.country_registered.message}</p>}
+            <div>
+							<Label>Registration Number</Label>
+            	<Input className='mt-3 mb-1' {...register('registration_number')} />
+            	{errors.registration_number && <p className="text-red-500">	{errors.registration_number.message}</p>}
+						</div>
 
-            <Label>Registration Number</Label>
-            <Input {...register('registration_number')} />
-            {errors.registration_number && <p className="text-red-500">{errors.registration_number.message}</p>}
-
-            <Label>Website</Label>
-            <Input {...register('website')} />
-            {errors.website && <p className="text-red-500">{errors.website.message}</p>}
-          </>
+            <div>
+							<Label>Website</Label>
+            	<Input className='mt-3 mb-1' {...register('website')} />
+            	{errors.website && <p className="text-red-500">	{errors.website.message}</p>}
+						</div>
+          </div>
         )}
 
         {step === 1 && (
           <>
-            <Label>Authorized Name</Label>
-            <Input {...register('authorized_name')} />
-            {errors.authorized_name && <p className="text-red-500">{errors.authorized_name.message}</p>}
+            <div>
+							<Label>Authorized Name</Label>
+            	<Input className='mt-3 mb-1' {...register('authorized_name')} />
+            	{errors.authorized_name && <p className="text-red-500">	{errors.authorized_name.message}</p>}
+						</div>
 
-            <Label>Title</Label>
-            <Input {...register('title')} />
-            {errors.title && <p className="text-red-500">{errors.title.message}</p>}
+            <div>
+							<Label>Title</Label>
+            	<Input className='mt-3 mb-1' {...register('title')} />
+            	{errors.title && <p className="text-red-500">	{errors.title.message}</p>}
+						</div>
 
-            <Label>Email</Label>
-            <Input {...register('auth_email')} />
-            {errors.auth_email && <p className="text-red-500">{errors.auth_email.message}</p>}
+            <div>
+							<Label>Email</Label>
+            	<Input className='mt-3 mb-1' {...register('auth_email')} />
+            	{errors.auth_email && <p className="text-red-500">	{errors.auth_email.message}</p>}
+						</div>
 
-            <Label>Passport Number</Label>
-            <Input {...register('passport_number')} />
-            {errors.passport_number && <p className="text-red-500">{errors.passport_number.message}</p>}
+            <div>
+							<Label>Passport Number</Label>
+            	<Input className='mt-3 mb-1' {...register('passport_number')} />
+            	{errors.passport_number && <p className="text-red-500">	{errors.passport_number.message}</p>}
+						</div>
           </>
         )}
 
         {step === 2 && (
           <>
-            <Label>Bank Name</Label>
-            <Input {...register('bank_name')} />
-            {errors.bank_name && <p className="text-red-500">{errors.bank_name.message}</p>}
+            <div>
+							<Label>Bank Name</Label>
+            	<Input className='mb-0' {...register('bank_name')} />
+            	{errors.bank_name && <p className="text-red-500">	{errors.bank_name.message}</p>}
+						</div>
 
-            <Label>Bank Address</Label>
-            <Input {...register('bank_address')} />
-            {errors.bank_address && <p className="text-red-500">{errors.bank_address.message}</p>}
+            <div>
+							<Label>Bank Address</Label>
+            	<Input className='mt-3 mb-1' {...register('bank_address')} />
+            	{errors.bank_address && <p className="text-red-500">	{errors.bank_address.message}</p>}
+						</div>
 
-            <Label>Account Number</Label>
-            <Input {...register('bank_account_number')} />
-            {errors.bank_account_number && <p className="text-red-500">{errors.bank_account_number.message}</p>}
+            <div>
+							<Label>Account Number</Label>
+            	<Input className='mt-3 mb-1' {...register('bank_account_number')} />
+            	{errors.bank_account_number && <p className="text-red-500">	{errors.bank_account_number.message}</p>}
+						</div>
 
-            <Label>IBAN</Label>
-            <Input {...register('iban')} />
-            {errors.iban && <p className="text-red-500">{errors.iban.message}</p>}
+            <div>
+							<Label>IBAN</Label>
+            	<Input className='mt-3 mb-1' {...register('iban')} />
+            	{errors.iban && <p className="text-red-500">	{errors.iban.message}</p>}
+						</div>
 
-            <Label>Bank Officer Email</Label>
-            <Input {...register('bank_officer_email')} />
-            {errors.bank_officer_email && <p className="text-red-500">{errors.bank_officer_email.message}</p>}
+            <div>
+							<Label>Bank Officer Email</Label>
+            	<Input className='mt-3 mb-1' {...register('bank_officer_email')} />
+            	{errors.bank_officer_email && <p className="text-red-500">	{errors.bank_officer_email.message}</p>}
+						</div>
           </>
         )}
 
         {step === 3 && (
           <>
-            <Label>Lawyer Name</Label>
-            <Input {...register('lawyer_name')} />
-            {errors.lawyer_name && <p className="text-red-500">{errors.lawyer_name.message}</p>}
+            <div>
+							<Label>Lawyer Name</Label>
+            	<Input className='mt-3 mb-1' {...register('lawyer_name')} />
+            	{errors.lawyer_name && <p className="text-red-500">	{errors.lawyer_name.message}</p>}
+						</div>
 
-            <Label>Lawyer Email</Label>
-            <Input {...register('lawyer_email')} />
-            {errors.lawyer_email && <p className="text-red-500">{errors.lawyer_email.message}</p>}
+            <div>
+							<Label>Lawyer Email</Label>
+            	<Input className='mt-3 mb-1' {...register('lawyer_email')} />
+            	{errors.lawyer_email && <p className="text-red-500">	{errors.lawyer_email.message}</p>}
+						</div>
 
-            <Label>Contact Name</Label>
-            <Input {...register('contact_name')} />
-            {errors.contact_name && <p className="text-red-500">{errors.contact_name.message}</p>}
+            <div>
+							<Label>Contact Name</Label>
+            	<Input className='mt-3 mb-1' {...register('contact_name')} />
+            	{errors.contact_name && <p className="text-red-500">	{errors.contact_name.message}</p>}
+						</div>
 
-            <Label>Contact Email</Label>
-            <Input {...register('contact_email')} />
-            {errors.contact_email && <p className="text-red-500">{errors.contact_email.message}</p>}
+            <div>
+							<Label>Contact Email</Label>
+            	<Input className='mt-3 mb-1' {...register('contact_email')} />
+            	{errors.contact_email && <p className="text-red-500">	{errors.contact_email.message}</p>}
+						</div>
           </>
         )}
 
         {step === 4 && (
           <>
-            <Label>Business Description</Label>
+            <div>
+							<Label>Business Description</Label>
             <Textarea {...register('description')} />
-            {errors.description && <p className="text-red-500">{errors.description.message}</p>}
+            	{errors.description && <p className="text-red-500">	{errors.description.message}</p>}
+						</div>
           </>
         )}
 
         {step === 5 && (
           <>
-            <Label>Declaration Name</Label>
-            <Input {...register('declaration_name')} />
-            {errors.declaration_name && <p className="text-red-500">{errors.declaration_name.message}</p>}
+            <div>
+							<Label>Declaration Name</Label>
+            	<Input className='mt-3 mb-1' {...register('declaration_name')} />
+            	{errors.declaration_name && <p className="text-red-500">	{errors.declaration_name.message}</p>}
+						</div>
 
-            <Label>Company</Label>
-            <Input {...register('declaration_company')} />
-            {errors.declaration_company && <p className="text-red-500">{errors.declaration_company.message}</p>}
+            <div>
+							<Label>Company</Label>
+            	<Input className='mt-3 mb-1' {...register('declaration_company')} />
+            	{errors.declaration_company && <p className="text-red-500">	{errors.declaration_company.message}</p>}
+						</div>
 
-            <Label>Passport Number</Label>
-            <Input {...register('declaration_passport')} />
-            {errors.declaration_passport && <p className="text-red-500">{errors.declaration_passport.message}</p>}
+            <div>
+							<Label>Passport Number</Label>
+            	<Input className='mt-3 mb-1' {...register('declaration_passport')} />
+            	{errors.declaration_passport && <p className="text-red-500">	{errors.declaration_passport.message}</p>}
+						</div>
           </>
         )}
 
         {step === 6 && (
           <>
-            <Label>Attach Passport</Label>
-            <Input type="file" onChange={(e) => setValue('passport_file', e.target.files?.[0])} />
-            {errors.passport_file && <p className="text-red-500">{errors.passport_file.message}</p>}
+            <div>
+							<Label>Attach Passport</Label>
+            	<Input type="file" onChange={(e) => setValue('passport_file', e.target.files?.[0])} />
+            	{errors.passport_file && <p className="text-red-500">	{errors.passport_file.message}</p>}
+						</div>
 
-            <Label>Attach Certificate</Label>
-            <Input type="file" onChange={(e) => setValue('certificate_file', e.target.files?.[0])} />
-            {errors.certificate_file && <p className="text-red-500">{errors.certificate_file.message}</p>}
+            <div>
+							<Label>Attach Certificate</Label>
+            	<Input type="file" onChange={(e) => setValue('certificate_file', e.target.files?.[0])} />
+            	{errors.certificate_file && <p className="text-red-500">	{errors.certificate_file.message}</p>}
+						</div>
           </>
         )}
 
