@@ -96,8 +96,9 @@ export default function CISForm() {
 
   return (
     <FormProvider {...methods}>
+	    <h2>Client Information Sheet</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto p-6 space-y-6">
-        <h2 className="text-2xl font-bold">Step {step + 1}</h2>
+        <p className="text-2xl font-bold">Step {step + 1}</p>
 
         {/* Step Content */}
         {step === 0 && (
