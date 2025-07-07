@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const sql = neon('postgresql://neondb_owner:npg_lq7siZ3dpWDf@ep-sweet-sea-aenka0uu-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require');
+const sql = neon(process.env.DATABASE_URL as string)
 const app = new Hono()
 
 // ✅ Enable CORS for all origins (during development)
