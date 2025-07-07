@@ -82,10 +82,31 @@ export default function CISForm() {
     6: ['passport_file', 'certificate_file'],
   }
 
-  const onSubmit = (data: FormSchema) => {
-    console.log('Submitted:', data)
-    alert('✅ Form submitted successfully!')
-  }
+  const onSubmit = async (data: FormSchema) => {
+    try {
+      const response = await fetch('http://localhost:3000/submit-cis', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...data,
+          passport_file_url: 'https://example.com/passport.pdf', // Replace after upload
+          certificate_file_url: 'https://example.com/cert.pdf'    // Replace after upload
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert('✅ Form submitted successfully!');
+      } else {
+        alert('❌ Submission failed: ' + result.error);
+      }
+    } catch (err) {
+      alert('❌ Network error');
+    }
+  };
+
 
   const nextStep = async () => {
     const valid = await trigger(stepFields[step])
@@ -96,7 +117,7 @@ export default function CISForm() {
 
   return (
     <FormProvider {...methods}>
-	    <h2>Client Information Sheet</h2>
+	    <h2 className='text-center text-bold lg:text-3xl mt-10 mb-0'>Client Information Sheet</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto p-6 space-y-6">
         <p className="text-2xl font-bold">Step {step + 1}</p>
 
