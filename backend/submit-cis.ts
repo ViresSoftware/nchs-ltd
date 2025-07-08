@@ -9,30 +9,32 @@ dotenv.config()
 const sql = neon(process.env.DATABASE_URL as string)
 const app = new Hono()
 
-// ✅ Enable CORS for all origins (during development)
 app.use('/submit-cis', cors())
 
 app.post('/submit-cis', async (c) => {
   try {
-    const data = await c.req.json()
+    const formData = await c.req.formData()
+    const json = formData.get('form')?.toString()
+    const data = JSON.parse(json || '{}')
+
+    const passport_file_url = 'https://example.com/passport.pdf' // Replace after actual upload
+    const certificate_file_url = 'https://example.com/certificate.pdf'
 
     await sql`
       INSERT INTO cis_submissions (
-        company_name, mailing_address, country_registered, registration_number, website,
-        authorized_name, title, auth_email, passport_number,
-        bank_name, bank_address, bank_account_number, iban, bank_officer_email,
-        lawyer_name, lawyer_email, contact_name, contact_email,
-        description,
-        declaration_name, declaration_company, declaration_passport,
+        company_name, entity_type, registration_number, country_registered, dob_or_incorporation,
+        mailing_address, phone, auth_email, website, authorized_contact,
+        authorized_name, title, passport_number,
+        bank_name, bank_address, bank_account_name, iban, swift_code,
+        business_type, description, trading_experience,
         passport_file_url, certificate_file_url
       ) VALUES (
-        ${data.company_name}, ${data.mailing_address}, ${data.country_registered}, ${data.registration_number}, ${data.website},
-        ${data.authorized_name}, ${data.title}, ${data.auth_email}, ${data.passport_number},
-        ${data.bank_name}, ${data.bank_address}, ${data.bank_account_number}, ${data.iban}, ${data.bank_officer_email},
-        ${data.lawyer_name}, ${data.lawyer_email}, ${data.contact_name}, ${data.contact_email},
-        ${data.description},
-        ${data.declaration_name}, ${data.declaration_company}, ${data.declaration_passport},
-        ${data.passport_file_url}, ${data.certificate_file_url}
+        ${data.company_name}, ${data.entity_type}, ${data.registration_number}, ${data.country_registered}, ${data.dob_or_incorporation},
+        ${data.mailing_address}, ${data.phone}, ${data.auth_email}, ${data.website}, ${data.authorized_contact},
+        ${data.authorized_name}, ${data.title}, ${data.passport_number},
+        ${data.bank_name}, ${data.bank_address}, ${data.bank_account_name}, ${data.iban}, ${data.swift_code},
+        ${data.business_type}, ${data.description}, ${data.trading_experience},
+        ${passport_file_url}, ${certificate_file_url}
       )
     `
 
@@ -44,6 +46,7 @@ app.post('/submit-cis', async (c) => {
     }, 500)
   }
 })
+
 
 const PORT = Number(process.env.PORT) || 5000
 console.log(`✅ Starting server on http://localhost:${PORT}`)

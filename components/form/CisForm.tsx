@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useForm, FormProvider } from 'react-hook-form'
+import { useForm, FormProvider, useFormContext } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -11,49 +11,47 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { ArrowRight } from 'lucide-react'
 
+// Schema definition
 const schema = z.object({
-  // Step 0
+  // Step 1 - Basic Identification
   company_name: z.string().min(1, 'Required'),
-  mailing_address: z.string().min(1, 'Required'),
-  country_registered: z.string().min(1, 'Required'),
+  entity_type: z.string().min(1, 'Required'),
   registration_number: z.string().min(1, 'Required'),
-  website: z.string().url('Invalid URL'),
+  country_registered: z.string().min(1, 'Required'),
+  dob_or_incorporation: z.string().min(1, 'Required'),
 
-  // Step 1
+  // Step 2 - Contact Info
+  mailing_address: z.string().min(1, 'Required'),
+  phone: z.string().min(1, 'Required'),
+  auth_email: z.string().email('Invalid email'),
+  website: z.string().url('Invalid URL').optional(),
+
+  // Step 3 - Authorized Signatory
   authorized_name: z.string().min(1, 'Required'),
   title: z.string().min(1, 'Required'),
-  auth_email: z.string().email('Invalid email'),
   passport_number: z.string().min(1, 'Required'),
+  authorized_contact: z.string().min(1, 'Required'), // ✅ Added
 
-  // Step 2
+
+  // Step 4 - Banking Details
   bank_name: z.string().min(1, 'Required'),
   bank_address: z.string().min(1, 'Required'),
-  bank_account_number: z.string().min(1, 'Required'),
+  bank_account_name: z.string().min(1, 'Required'),
   iban: z.string().min(1, 'Required'),
-  bank_officer_email: z.string().email('Invalid email'),
+  swift_code: z.string().min(1, 'Required'),
 
-  // Step 3
-  lawyer_name: z.string().min(1, 'Required'),
-  lawyer_email: z.string().email('Invalid email'),
-  contact_name: z.string().min(1, 'Required'),
-  contact_email: z.string().email('Invalid email'),
-
-  // Step 4
+  // Step 5 - Business Info
+  business_type: z.string().min(1, 'Required'),
   description: z.string().min(1, 'Required'),
+  trading_experience: z.string().optional(),
 
-  // Step 5
-  declaration_name: z.string().min(1, 'Required'),
-  declaration_company: z.string().min(1, 'Required'),
-  declaration_passport: z.string().min(1, 'Required'),
-
-  // Step 6
+  // Step 6 - Documents
   passport_file: z
-  .instanceof(File, { message: 'Passport file is required' })
-  .refine((file) => file.size < 5 * 1024 * 1024, 'Passport file must be under 5MB'),
-
-	certificate_file: z
-		.instanceof(File, { message: 'Certificate file is required' })
-		.refine((file) => file.size < 5 * 1024 * 1024, 'Certificate file must be under 5MB'),
+    .instanceof(File, { message: 'Passport file is required' })
+    .refine((file) => file.size < 5 * 1024 * 1024, 'Must be under 5MB'),
+  certificate_file: z
+    .instanceof(File, { message: 'Certificate file is required' })
+    .refine((file) => file.size < 5 * 1024 * 1024, 'Must be under 5MB'),
 })
 
 type FormSchema = z.infer<typeof schema>
@@ -74,40 +72,33 @@ export default function CISForm() {
   } = methods
 
   const stepFields: Record<number, (keyof FormSchema)[]> = {
-    0: ['company_name', 'mailing_address', 'country_registered', 'registration_number', 'website'],
-    1: ['authorized_name', 'title', 'auth_email', 'passport_number'],
-    2: ['bank_name', 'bank_address', 'bank_account_number', 'iban', 'bank_officer_email'],
-    3: ['lawyer_name', 'lawyer_email', 'contact_name', 'contact_email'],
-    4: ['description'],
-    5: ['declaration_name', 'declaration_company', 'declaration_passport'],
-    6: ['passport_file', 'certificate_file'],
+    0: ['company_name', 'entity_type', 'registration_number', 'country_registered', 'dob_or_incorporation'],
+    1: ['mailing_address', 'phone', 'auth_email', 'website'], // ✅ Updated
+    2: ['authorized_name', 'title', 'passport_number', 'authorized_contact'],
+    3: ['bank_name', 'bank_address', 'bank_account_name', 'iban', 'swift_code'],
+    4: ['business_type', 'description', 'trading_experience'],
+    5: ['passport_file', 'certificate_file'],
   }
 
   const onSubmit = async (data: FormSchema) => {
+    const formData = new FormData()
+    formData.append('passport_file', data.passport_file)
+    formData.append('certificate_file', data.certificate_file)
+    formData.append('form', JSON.stringify(data))
+
     try {
       const response = await fetch('http://localhost:5000/submit-cis', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...data,
-          passport_file_url: 'https://example.com/passport.pdf', // Replace after upload
-          certificate_file_url: 'https://example.com/cert.pdf'    // Replace after upload
-        }),
-      });
+        body: formData,
+      })
 
-      const result = await response.json();
-      if (result.success) {
-        alert('✅ Form submitted successfully!');
-      } else {
-        alert('❌ Submission failed: ' + result.error);
-      }
-    } catch (err) {
-      alert('❌ Network error');
+      const result = await response.json()
+      if (result.success) alert('✅ Form submitted successfully!')
+      else alert('❌ Submission failed: ' + result.error)
+    } catch {
+      alert('❌ Network error')
     }
-  };
-
+  }
 
   const nextStep = async () => {
     const valid = await trigger(stepFields[step])
@@ -119,207 +110,116 @@ export default function CISForm() {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto p-6 space-y-6">
-        <p className="text-2xl font-bold">Step {step + 1}</p>
+        <p className="text-2xl font-bold">
+          {step === 0 && '1. Basic Identification'}
+          {step === 1 && '2. Contact Information'}
+          {step === 2 && '3. Authorized Signatory Information (for companies)'}
+          {step === 3 && '4. Banking Details (sometimes required)'}
+          {step === 4 && '5. Business Information'}
+          {step === 5 && '6. Identification Documents'}
+        </p>
+          {/* Step 0 - Basic Identification */}
+          {step === 0 && (
+            <>
+              <InputGroup label="Full Name / Company Name" field="company_name" />
+              <InputGroup label="Type (Individual / Company / Trust / etc.)" field="entity_type" />
+              <InputGroup label="Registration Number (if company)" field="registration_number" />
+              <InputGroup label="Nationality / Country of Incorporation" field="country_registered" />
+              <InputGroup label="Date of Birth or Incorporation" field="dob_or_incorporation" />
+            </>
+          )}
 
-        {/* Step Content */}
-        {step === 0 && (
-          <div className='space-y-6'>
-						<div>
-							<Label>Company Name</Label>
-							<Input className='mt-3 mb-1' {...register('company_name')} />
-							{errors.company_name && <p className="text-red-500">	{errors.company_name.message}</p>}
-						</div>
-            <div>
-							<Label>Mailing Address</Label>
-            	<Input className='mt-3 mb-1' {...register('mailing_address')} />
-            	{errors.mailing_address && <p className="text-red-500">	{errors.mailing_address.message}</p>}
-						</div>
+          {/* Step 1 - Contact Information */}
+          {step === 1 && (
+            <>
+              <InputGroup label="Full Address" field="mailing_address" />
+              <InputGroup label="Telephone Number" field="phone" />
+              <InputGroup label="Email Address" field="auth_email" />
+              <InputGroup label="Website (if company)" field="website" />
+            </>
+          )}
 
-            <div>
-							<Label>Country Registered</Label>
-            	<Input className='mt-3 mb-1' {...register('country_registered')} />
-            	{errors.country_registered && <p className="text-red-500">	{errors.country_registered.message}</p>}
-						</div>
+          {/* Step 2 - Authorized Signatory Information (for companies) */}
+          {step === 2 && (
+            <>
+              <InputGroup label="Name of Authorized Signatory" field="authorized_name" />
+              <InputGroup label="Title / Position" field="title" />
+              <InputGroup label="Passport or ID Number" field="passport_number" />
+              <InputGroup label="Contact Details" field="authorized_contact" />
+            </>
+          )}
 
-            <div>
-							<Label>Registration Number</Label>
-            	<Input className='mt-3 mb-1' {...register('registration_number')} />
-            	{errors.registration_number && <p className="text-red-500">	{errors.registration_number.message}</p>}
-						</div>
+          {/* Step 3 - Banking Details (sometimes required) */}
+          {step === 3 && (
+            <>
+              <InputGroup label="Bank Name" field="bank_name" />
+              <InputGroup label="Bank Address" field="bank_address" />
+              <InputGroup label="Account Name" field="bank_account_name" />
+              <InputGroup label="Account Number / IBAN" field="iban" />
+              <InputGroup label="SWIFT / BIC Code" field="swift_code" />
+            </>
+          )}
 
-            <div>
-							<Label>Website</Label>
-            	<Input className='mt-3 mb-1' {...register('website')} />
-            	{errors.website && <p className="text-red-500">	{errors.website.message}</p>}
-						</div>
-          </div>
-        )}
+          {/* Step 4 - Business Information */}
+          {step === 4 && (
+            <>
+              <InputGroup label="Business Type / Sector" field="business_type" />
+              <div>
+                <Label>Brief Description of Activities</Label>
+                <Textarea className="mt-2" {...register('description')} />
+                {errors.description && <p className="text-red-500">{errors.description.message}</p>}
+              </div>
+              <InputGroup label="Trading Experience (if relevant)" field="trading_experience" />
+            </>
+          )}
 
-        {step === 1 && (
-          <>
-            <div>
-							<Label>Authorized Name</Label>
-            	<Input className='mt-3 mb-1' {...register('authorized_name')} />
-            	{errors.authorized_name && <p className="text-red-500">	{errors.authorized_name.message}</p>}
-						</div>
-
-            <div>
-							<Label>Title</Label>
-            	<Input className='mt-3 mb-1' {...register('title')} />
-            	{errors.title && <p className="text-red-500">	{errors.title.message}</p>}
-						</div>
-
-            <div>
-							<Label>Email</Label>
-            	<Input className='mt-3 mb-1' {...register('auth_email')} />
-            	{errors.auth_email && <p className="text-red-500">	{errors.auth_email.message}</p>}
-						</div>
-
-            <div>
-							<Label>Passport Number</Label>
-            	<Input className='mt-3 mb-1' {...register('passport_number')} />
-            	{errors.passport_number && <p className="text-red-500">	{errors.passport_number.message}</p>}
-						</div>
-          </>
-        )}
-
-        {step === 2 && (
-          <>
-            <div>
-							<Label>Bank Name</Label>
-            	<Input className='mb-0' {...register('bank_name')} />
-            	{errors.bank_name && <p className="text-red-500">	{errors.bank_name.message}</p>}
-						</div>
-
-            <div>
-							<Label>Bank Address</Label>
-            	<Input className='mt-3 mb-1' {...register('bank_address')} />
-            	{errors.bank_address && <p className="text-red-500">	{errors.bank_address.message}</p>}
-						</div>
-
-            <div>
-							<Label>Account Number</Label>
-            	<Input className='mt-3 mb-1' {...register('bank_account_number')} />
-            	{errors.bank_account_number && <p className="text-red-500">	{errors.bank_account_number.message}</p>}
-						</div>
-
-            <div>
-							<Label>IBAN</Label>
-            	<Input className='mt-3 mb-1' {...register('iban')} />
-            	{errors.iban && <p className="text-red-500">	{errors.iban.message}</p>}
-						</div>
-
-            <div>
-							<Label>Bank Officer Email</Label>
-            	<Input className='mt-3 mb-1' {...register('bank_officer_email')} />
-            	{errors.bank_officer_email && <p className="text-red-500">	{errors.bank_officer_email.message}</p>}
-						</div>
-          </>
-        )}
-
-        {step === 3 && (
-          <>
-            <div>
-							<Label>Lawyer Name</Label>
-            	<Input className='mt-3 mb-1' {...register('lawyer_name')} />
-            	{errors.lawyer_name && <p className="text-red-500">	{errors.lawyer_name.message}</p>}
-						</div>
-
-            <div>
-							<Label>Lawyer Email</Label>
-            	<Input className='mt-3 mb-1' {...register('lawyer_email')} />
-            	{errors.lawyer_email && <p className="text-red-500">	{errors.lawyer_email.message}</p>}
-						</div>
-
-            <div>
-							<Label>Contact Name</Label>
-            	<Input className='mt-3 mb-1' {...register('contact_name')} />
-            	{errors.contact_name && <p className="text-red-500">	{errors.contact_name.message}</p>}
-						</div>
-
-            <div>
-							<Label>Contact Email</Label>
-            	<Input className='mt-3 mb-1' {...register('contact_email')} />
-            	{errors.contact_email && <p className="text-red-500">	{errors.contact_email.message}</p>}
-						</div>
-          </>
-        )}
-
-        {step === 4 && (
-          <>
-            <div>
-							<Label>Business Description</Label>
-            <Textarea {...register('description')} />
-            	{errors.description && <p className="text-red-500">	{errors.description.message}</p>}
-						</div>
-          </>
-        )}
-
-        {step === 5 && (
-          <>
-            <div>
-							<Label>Declaration Name</Label>
-            	<Input className='mt-3 mb-1' {...register('declaration_name')} />
-            	{errors.declaration_name && <p className="text-red-500">	{errors.declaration_name.message}</p>}
-						</div>
-
-            <div>
-							<Label>Company</Label>
-            	<Input className='mt-3 mb-1' {...register('declaration_company')} />
-            	{errors.declaration_company && <p className="text-red-500">	{errors.declaration_company.message}</p>}
-						</div>
-
-            <div>
-							<Label>Passport Number</Label>
-            	<Input className='mt-3 mb-1' {...register('declaration_passport')} />
-            	{errors.declaration_passport && <p className="text-red-500">	{errors.declaration_passport.message}</p>}
-						</div>
-          </>
-        )}
-
-        {step === 6 && (
-          <>
-            <div>
-							<Label>Attach Passport</Label>
-            	<Input
-								type="file"
-								onChange={(e) => {
-									const file = e.target.files?.[0]
-									if (file) {
-										setValue('passport_file', file)
-									}
-								}}
-							/>
-            	{errors.passport_file && <p className="text-red-500">	{errors.passport_file.message}</p>}
-						</div>
-
-            <div>
-							<Label>Attach Certificate</Label>
-            	<Input
-								type="file"
-								onChange={(e) => {
-									const file = e.target.files?.[0]
-									if (file) {
-										setValue('certificate_file', file)
-									}
-								}}
-							/>
-            	{errors.certificate_file && <p className="text-red-500">	{errors.certificate_file.message}</p>}
-						</div>
-          </>
-        )}
+          {/* Step 5 - Identification Documents */}
+          {step === 5 && (
+            <>
+              <FileInputGroup label="Copy of Passport / ID" field="passport_file" />
+              <FileInputGroup label="Certificate of Incorporation (for companies)" field="certificate_file" />
+            </>
+          )}
 
         {/* Navigation Buttons */}
         <div className="flex justify-between pt-4">
           {step > 0 && <Button type="button" variant="outline" onClick={backStep}>Back</Button>}
-
-          {step < 6 ? (
-            <Button className='ml-auto' type="button" onClick={nextStep}>Next <ArrowRight className="h-5 w-5"/></Button>
-          ) : (
-            <Button type="submit">Submit</Button>
-          )}
+          {step < 5
+            ? <Button className="ml-auto" type="button" onClick={nextStep}>Next <ArrowRight className="h-5 w-5" /></Button>
+            : <Button type="submit">Submit</Button>}
         </div>
       </form>
     </FormProvider>
+  )
+}
+
+// Helper: Input group with error
+function InputGroup({ label, field }: { label: string, field: keyof FormSchema }) {
+  const { register, formState: { errors } } = useFormContext<FormSchema>()
+  return (
+    <div>
+      <Label>{label}</Label>
+      <Input className="mt-2" {...register(field)} />
+      {errors[field] && <p className="text-red-500">{errors[field]?.message as string}</p>}
+    </div>
+  )
+}
+
+// Helper: File input
+function FileInputGroup({ label, field }: { label: string, field: keyof FormSchema }) {
+  const { setValue, formState: { errors } } = useFormContext<FormSchema>()
+  return (
+    <div>
+      <Label>{label}</Label>
+      <Input
+        className='mt-2 text-left block'
+        type="file"
+        onChange={(e) => {
+          const file = e.target.files?.[0]
+          if (file) setValue(field, file)
+        }}
+      />
+      {errors[field] && <p className="text-red-500">{errors[field]?.message as string}</p>}
+    </div>
   )
 }
