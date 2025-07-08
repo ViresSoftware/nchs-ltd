@@ -183,7 +183,7 @@ export default function CISForm() {
 
         {/* Navigation Buttons */}
         <div className="flex justify-between pt-4">
-          {step > 0 && <Button type="button" variant="outline" onClick={backStep}>Back</Button>}
+          {step > 0 && <Button className='text-black' type="button" variant="outline" onClick={backStep}>Back</Button>}
           {step < 5
             ? <Button className="ml-auto" type="button" onClick={nextStep}>Next <ArrowRight className="h-5 w-5" /></Button>
             : <Button type="submit">Submit</Button>}
