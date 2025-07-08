@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { ArrowRight } from 'lucide-react'
 
 const schema = z.object({
   // Step 0
@@ -96,7 +97,6 @@ export default function CISForm() {
 
   return (
     <FormProvider {...methods}>
-	    <h2>Client Information Sheet</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto p-6 space-y-6">
         <p className="text-2xl font-bold">Step {step + 1}</p>
 
@@ -293,7 +293,7 @@ export default function CISForm() {
           {step > 0 && <Button type="button" variant="outline" onClick={backStep}>Back</Button>}
 
           {step < 6 ? (
-            <Button className='ml-auto' type="button" onClick={nextStep}>Next</Button>
+            <Button className='ml-auto' type="button" onClick={nextStep}>Next <ArrowRight className="h-5 w-5"/></Button>
           ) : (
             <Button type="submit">Submit</Button>
           )}
