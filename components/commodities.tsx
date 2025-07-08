@@ -16,17 +16,16 @@ export default function Commodities() {
         <h2 className="text-3xl font-playfair text-center mb-10">Our Commodities</h2>
 
         <div className="grid gap-4 lg:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-6 shadow-sm">
-            <CardContent className="p-6 space-y-2 text-white">
+          <Card className="bg-[url('/oil-refined-fuels.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border py-0 shadow-sm">
+            <CardContent className="p-6 gap-3 text-white bg-black/60 rounded-xl lg:py-14 py-2 h-full flex flex-col justify-center">
               <h3 className="text-md md:text-xl font-semibold font-playfair">Oil & Refined Fuels</h3>
               <p className="text-sm">
                 Crude Oil, Jet A1, D2/D6, LNG, LPG — verified allocations only.
               </p>
             </CardContent>
           </Card>
-
-          <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-6 shadow-sm">
-            <CardContent className="p-6 space-y-2 text-white">
+          <Card className="bg-[url('/ai-data-center.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border py-0 shadow-sm">
+            <CardContent className="p-6 gap-3 text-white bg-black/60 rounded-xl lg:py-14 py-2 h-full flex flex-col justify-center">
               <h3 className="text-md md:text-xl font-semibold font-playfair">AI & Data Center Infrastructure</h3>
               <p className="text-sm">
                 Strategic partnerships for energy-integrated AI optimization in oil logistics.
@@ -34,8 +33,8 @@ export default function Commodities() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-6 shadow-sm">
-            <CardContent className="p-6 space-y-2 text-white">
+          <Card className="bg-[url('/solar-energy.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border py-0 shadow-sm">
+            <CardContent className="p-6 gap-3 text-white bg-black/60 rounded-xl lg:py-14 py-2 h-full flex flex-col justify-center">
               <h3 className="text-md md:text-xl font-semibold font-playfair">Solar Energy</h3>
               <p className="text-sm">
                 Grid-scale solar investments for institutional and sovereign-level players.
@@ -43,8 +42,8 @@ export default function Commodities() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-6 shadow-sm">
-            <CardContent className="p-6 space-y-2 text-white">
+          <Card className="bg-[url('/gold-asset-backed-instruments.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border py-0 shadow-sm">
+            <CardContent className="p-6 gap-3 text-white bg-black/60 rounded-xl lg:py-14 py-2 h-full flex flex-col justify-center">
               <h3 className="text-md md:text-xl font-semibold font-playfair">Gold & Asset-Backed Instruments</h3>
               <p className="text-sm">
                 Bullion, Dore Bars, and structured private gold-backed financial vehicles.
@@ -52,8 +51,8 @@ export default function Commodities() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-6 shadow-sm">
-            <CardContent className="p-6 space-y-2 text-white">
+          <Card className="bg-[url('/cryptocurrency.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border py-0 shadow-sm">
+            <CardContent className="p-6 gap-3 text-white bg-black/60 rounded-xl lg:py-14 py-2 h-full flex flex-col justify-center">
               <h3 className="text-md md:text-xl font-semibold font-playfair">Cryptocurrency</h3>
               <p className="text-sm">
                 BTC block trades, USDT/USDC transactions via private execution desks.
@@ -61,8 +60,8 @@ export default function Commodities() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-2 lg:py-6 shadow-sm">
-            <CardContent className="p-6 space-y-2 text-white">
+          <Card className="bg-[url('/fine-arts.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border py-0 shadow-sm">
+            <CardContent className="p-6 gap-3 text-white bg-black/60 rounded-xl lg:py-14 py-2 h-full flex flex-col justify-center">
               <h3 className="text-md md:text-xl font-semibold font-playfair">Fine Art</h3>
               <p className="text-sm">
                 Discreet acquisition/sale of investment-grade Tier 1 global artworks.
