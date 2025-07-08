@@ -16,7 +16,7 @@ export default function Privacy() {
       <div className="absolute inset-0 bg-black/50 z-0" />
       <div className="max-w-4xl mx-auto text-center mb-10 relative z-10">
         <h2 className="text-3xl font-playfair mb-4">Privacy Protocols & Disclaimers</h2>
-        <p className="text-sm mb-4">
+        <p className="text-sm mb-8">
           Your trust is protected under institutional-grade security and legal compliance.
         </p>
         <div className="grid gap-4 lg:gap-6 md:grid-cols-3 max-w-6xl mx-auto">

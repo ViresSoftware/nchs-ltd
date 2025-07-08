@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import logo from "@/public/logo.png";
+import logo from "@/public/logo-horizontal.png";
 import { Menu, X, Lock } from "lucide-react"; // for toggle icons
 import LoginForm from "../form/Login";
 
@@ -51,7 +51,7 @@ export default function Header() {
   return (
     <header
       id="main-header"
-      className={`fixed top-0 w-full z-50 text-white ${
+      className={`fixed top-0 w-full z-50 text-white py-4 ${
         scrolled || menuOpen ? "bg-black" : "bg-transparent"
       }`}
       style={{ transition: 'all 500ms' }}
@@ -59,9 +59,8 @@ export default function Header() {
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-0">
         {/* Logo */}
         <Link href="/#hero" scroll={true} className="flex items-center space-x-2">
-          <Image src={logo} alt="NCHS LTD Logo" width={100} height={40} priority />
+          <Image src={logo} alt="NCHS LTD Logo" width={192} height={40} priority />
         </Link>
-
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
           {/* <Link href="#hero" scroll={true} className="hover:text-[#b28f3f]">Home</Link> */}
