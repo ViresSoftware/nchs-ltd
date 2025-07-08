@@ -19,6 +19,7 @@ export default function Footer() {
           <Link href="/#commodities" scroll={true} className="block hover:text-[#b28f3f]">Offerings</Link>
           <Link href="/#privacy" scroll={true} className="block hover:text-[#b28f3f]">Protocols</Link>
           <Link href="/#contact" scroll={true} className="block hover:text-[#b28f3f]">Inquiry</Link>
+          <Link href="/client-information-sheet" scroll={true} className="block hover:text-[#b28f3f]">Client Information sheet</Link>
         </nav>
         <div className="text-md text-muted-foreground leading-relaxed flex items-center gap-2">
           <Building2 size={18} />

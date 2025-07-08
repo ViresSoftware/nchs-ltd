@@ -62,19 +62,20 @@ export default function Header() {
           <Image src={logo} alt="NCHS LTD Logo" width={192} height={40} priority />
         </Link>
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+        <nav className="hidden lg:flex items-center space-x-6 text-sm font-medium">
           {/* <Link href="#hero" scroll={true} className="hover:text-[#b28f3f]">Home</Link> */}
           <Link href="/about" scroll={true} className="hover:text-[#b28f3f]">About</Link>
-          <Link href="#commodities" scroll={true} className="hover:text-[#b28f3f]">Offerings</Link>
-          <Link href="#privacy" scroll={true} className="hover:text-[#b28f3f]">Protocols</Link>
-          <Link href="#contact" scroll={true} className="hover:text-[#b28f3f]">Inquiry</Link>
+          <Link href="/#commodities" scroll={true} className="hover:text-[#b28f3f]">Offerings</Link>
+          <Link href="/#privacy" scroll={true} className="hover:text-[#b28f3f]">Protocols</Link>
+          <Link href="/#contact" scroll={true} className="hover:text-[#b28f3f]">Inquiry</Link>
+          <Link href="/client-information-sheet" scroll={true} className="block hover:text-[#b28f3f]">Client Information sheet</Link>
         </nav>
 
         {/* Secure Login (Desktop) */}
         <Button
           variant="outline"
           size="sm"
-          className="bg-black ml-4 hidden md:inline-flex flex-row items-center justify-between"
+          className="bg-black ml-4 hidden lg:inline-flex flex-row items-center justify-between"
           onClick={() => setLoginDialogOpen(true)}
         >
           <span>Secure Login</span>
@@ -82,14 +83,14 @@ export default function Header() {
         </Button>
 
         {/* Mobile Menu Toggle */}
-        <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
+        <button className="lg:hidden" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* Mobile Nav */}
       {menuOpen && (
-        <div className="md:hidden text-white px-6 pb-4 space-y-4 font-medium">
+        <div className="lg:hidden text-white px-6 pb-4 space-y-4 font-medium">
           {/* <Link href="#hero" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Home</Link> */}
           <Link href="/about" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>About</Link>
           <Link href="#commodities" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Offerings</Link>
