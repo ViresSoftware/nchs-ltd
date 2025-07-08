@@ -20,7 +20,7 @@ export default function Privacy() {
           Your trust is protected under institutional-grade security and legal compliance.
         </p>
         <div className="grid gap-4 lg:gap-6 md:grid-cols-3 max-w-6xl mx-auto">
-          <Card className="bg-[url('/confidential-notice.jpg')] bg-cover bg-center bg-card text-card-foreground flex flex-col gap-6 rounded-xl border shadow-sm py-0">
+          <Card className="bg-[url('/confidential-notice.jpg')] bg-cover bg-center bg-card text-card-foreground flex flex-col gap-6 rounded-xl border-0 shadow-lg py-0">
             <CardContent className="p-6 space-y-2 text-white bg-black/70 py-2  lg:py-8 rounded-xl h-full">
               <h3 className="font-semibold text-base font-playfair">CONFIDENTIALITY NOTICE</h3>
               <p className="text-sm">
@@ -28,7 +28,7 @@ export default function Privacy() {
               </p>
             </CardContent>
           </Card>
-          <Card className="bg-[url('/security.jpg')] bg-cover bg-center bg-card text-card-foreground flex flex-col gap-6 rounded-xl border shadow-sm py-0">
+          <Card className="bg-[url('/security.jpg')] bg-cover bg-center bg-card text-card-foreground flex flex-col gap-6 rounded-xl border-0 shadow-lg py-0">
             <CardContent className="p-6 space-y-2 text-white bg-black/70 py-2 lg:py-8 rounded-xl h-full">
               <h3 className="font-semibold text-base font-playfair">COMPLIANCE & SECURITY</h3>
               <p className="text-sm">
@@ -36,7 +36,7 @@ export default function Privacy() {
               </p>
             </CardContent>
           </Card>
-          <Card className="bg-[url('/legal-notice.jpg')] bg-cover bg-center bg-card text-card-foreground flex flex-col gap-6 rounded-xl border shadow-sm py-0">
+          <Card className="bg-[url('/legal-notice.jpg')] bg-cover bg-center bg-card text-card-foreground flex flex-col gap-6 rounded-xl border-0 shadow-lg py-0">
             <CardContent className="p-6 space-y-2 text-white bg-black/70 py-2  lg:py-8 rounded-xl h-full">
               <h3 className="font-semibold text-base font-playfair">LEGAL NOTICE</h3>
               <p className="text-sm">

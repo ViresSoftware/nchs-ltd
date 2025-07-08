@@ -16,7 +16,7 @@ export default function Commodities() {
         <h2 className="text-3xl font-playfair text-center mb-10">Our Commodities</h2>
 
         <div className="grid gap-4 lg:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          <Card className="bg-[url('/oil-refined-fuels.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border py-0 shadow-sm">
+          <Card className="bg-[url('/oil-refined-fuels.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border-0 py-0 shadow-lg">
             <CardContent className="p-6 gap-3 text-white bg-black/60 rounded-xl lg:py-14 py-2 h-full flex flex-col justify-center">
               <h3 className="text-md md:text-xl font-semibold font-playfair">Oil & Refined Fuels</h3>
               <p className="text-sm">
@@ -24,7 +24,7 @@ export default function Commodities() {
               </p>
             </CardContent>
           </Card>
-          <Card className="bg-[url('/ai-data-center.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border py-0 shadow-sm">
+          <Card className="bg-[url('/ai-data-center.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border-0 py-0 shadow-lg">
             <CardContent className="p-6 gap-3 text-white bg-black/60 rounded-xl lg:py-14 py-2 h-full flex flex-col justify-center">
               <h3 className="text-md md:text-xl font-semibold font-playfair">AI & Data Center Infrastructure</h3>
               <p className="text-sm">
@@ -33,7 +33,7 @@ export default function Commodities() {
             </CardContent>
           </Card>
 
-          <Card className="bg-[url('/solar-energy.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border py-0 shadow-sm">
+          <Card className="bg-[url('/solar-energy.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border-0 py-0 shadow-lg">
             <CardContent className="p-6 gap-3 text-white bg-black/60 rounded-xl lg:py-14 py-2 h-full flex flex-col justify-center">
               <h3 className="text-md md:text-xl font-semibold font-playfair">Solar Energy</h3>
               <p className="text-sm">
@@ -42,7 +42,7 @@ export default function Commodities() {
             </CardContent>
           </Card>
 
-          <Card className="bg-[url('/gold-asset-backed-instruments.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border py-0 shadow-sm">
+          <Card className="bg-[url('/gold-asset-backed-instruments.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border-0 py-0 shadow-lg">
             <CardContent className="p-6 gap-3 text-white bg-black/60 rounded-xl lg:py-14 py-2 h-full flex flex-col justify-center">
               <h3 className="text-md md:text-xl font-semibold font-playfair">Gold & Asset-Backed Instruments</h3>
               <p className="text-sm">
@@ -51,7 +51,7 @@ export default function Commodities() {
             </CardContent>
           </Card>
 
-          <Card className="bg-[url('/cryptocurrency.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border py-0 shadow-sm">
+          <Card className="bg-[url('/cryptocurrency.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border-0 py-0 shadow-lg">
             <CardContent className="p-6 gap-3 text-white bg-black/60 rounded-xl lg:py-14 py-2 h-full flex flex-col justify-center">
               <h3 className="text-md md:text-xl font-semibold font-playfair">Cryptocurrency</h3>
               <p className="text-sm">
@@ -60,7 +60,7 @@ export default function Commodities() {
             </CardContent>
           </Card>
 
-          <Card className="bg-[url('/fine-arts.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border py-0 shadow-sm">
+          <Card className="bg-[url('/fine-arts.jpg')] bg-cover bg-center text-card-foreground flex flex-col gap-6 rounded-xl border-0 py-0 shadow-lg">
             <CardContent className="p-6 gap-3 text-white bg-black/60 rounded-xl lg:py-14 py-2 h-full flex flex-col justify-center">
               <h3 className="text-md md:text-xl font-semibold font-playfair">Fine Art</h3>
               <p className="text-sm">
