@@ -19,6 +19,9 @@ const playfair = Playfair_Display({
 export const metadata = {
   title: "NCHS LTD",
   description: "Private access to the world’s most valuable assets — secured, verified, confidential.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
