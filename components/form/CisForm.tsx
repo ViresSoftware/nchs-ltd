@@ -20,39 +20,6 @@ import {
 
 const entityTypes = ['Individual', 'Company'] as const
 
-const baseSchema = z.object({
-  company_name: z.string().min(1, 'Company name is required'),
-  entity_type: z.enum(entityTypes, {
-    errorMap: () => ({ message: 'Entity type is required' }),
-  }),
-  registration_number: z.string().optional(),
-  country_registered: z.string().min(1, 'Country is required'),
-  dob_or_incorporation: z.string().min(1, 'Date is required'),
-
-  mailing_address: z.string().min(1, 'Mailing address is required'),
-  phone: z.string().min(10, 'Phone must be at least 10 digits'),
-  auth_email: z.string().email('Invalid email'),
-  website: z.string().optional().or(z.literal('')),
-
-  authorized_name: z.string().optional(),
-  title: z.string().optional(),
-  passport_number: z.string().optional(),
-  authorized_contact: z.string().optional(),
-
-  bank_name: z.string().min(1, 'Bank name is required'),
-  bank_address: z.string().min(1, 'Bank address is required'),
-  bank_account_name: z.string().min(1, 'Account name is required'),
-  iban: z.string().min(1, 'IBAN is required'),
-  swift_code: z.string().min(1, 'SWIFT code is required'),
-
-  business_type: z.string().min(1, 'Business type is required'),
-  description: z.string().min(1, 'Description is required'),
-  trading_experience: z.string().optional(),
-
-  passport_file: z.instanceof(File, { message: 'Passport file is required' }),
-  certificate_file: z.instanceof(File).optional(),
-})
-
 const schema = z.object({
   company_name: z.string().min(1, 'Company name is required'),
   entity_type: z.enum(entityTypes, {
@@ -61,32 +28,27 @@ const schema = z.object({
   registration_number: z.string().optional(),
   country_registered: z.string().min(1, 'Country is required'),
   dob_or_incorporation: z.string().min(1, 'Date is required'),
-
   mailing_address: z.string().min(1, 'Mailing address is required'),
   phone: z.string().min(10, 'Phone must be at least 10 digits'),
   auth_email: z.string().email('Invalid email'),
   website: z.string().optional().or(z.literal('')),
-
   authorized_name: z.string().optional(),
   title: z.string().optional(),
   passport_number: z.string().optional(),
   authorized_contact: z.string().optional(),
-
   bank_name: z.string().min(1, 'Bank name is required'),
   bank_address: z.string().min(1, 'Bank address is required'),
   bank_account_name: z.string().min(1, 'Account name is required'),
   iban: z.string().min(1, 'IBAN is required'),
   swift_code: z.string().min(1, 'SWIFT code is required'),
-
   business_type: z.string().min(1, 'Business type is required'),
   description: z.string().min(1, 'Description is required'),
   trading_experience: z.string().optional(),
-
   passport_file: z.instanceof(File, { message: 'Passport file is required' }),
   certificate_file: z.instanceof(File).optional(),
 }).superRefine((data, ctx) => {
   if (data.entity_type === 'Company') {
-    const requiredFields: { key: keyof typeof data; message: string }[] = [
+    const requiredFields = [
       { key: 'registration_number', message: 'Registration number is required' },
       { key: 'website', message: 'Website is required' },
       { key: 'authorized_name', message: 'Authorized name is required' },
@@ -97,23 +59,17 @@ const schema = z.object({
     ]
 
     for (const { key, message } of requiredFields) {
-      const value = data[key]
-      const isMissing =
-        key === 'certificate_file'
-          ? !(value instanceof File)
-          : !value || (typeof value === 'string' && !value.trim())
+      const value = data[key as keyof typeof data]
+      const isMissing = key === 'certificate_file'
+        ? !(value instanceof File)
+        : !value || (typeof value === 'string' && !value.trim())
 
       if (isMissing) {
-        ctx.addIssue({
-          path: [key],
-          code: z.ZodIssueCode.custom,
-          message,
-        })
+        ctx.addIssue({ path: [key], code: z.ZodIssueCode.custom, message })
       }
     }
   }
 })
-
 
 type FormSchema = z.infer<typeof schema>
 
@@ -142,20 +98,18 @@ export default function CISForm() {
     setStep(0)
   }, [entityType])
 
-  const fullSteps = useMemo(() => {
-    return [
-      'Basic Identification',
-      'Contact Information',
-      ...(entityType === 'Individual' ? [] : ['Authorized Signatory']),
-      'Banking Details',
-      'Business Info',
-      'Document Uploads',
-    ]
-  }, [entityType])
+  const fullSteps = useMemo(() => [
+    'Basic Identification',
+    'Contact Information',
+    ...(entityType === 'Individual' ? [] : ['Authorized Signatory']),
+    'Banking Details',
+    'Business Info',
+    'Document Uploads',
+  ], [entityType])
 
   const stepFields: Record<number, (keyof FormSchema)[]> = useMemo(() => {
-    let fields: Record<number, (keyof FormSchema)[]> = {}
     let i = 0
+    const fields: Record<number, (keyof FormSchema)[]> = {}
     fields[i++] = ['company_name', 'entity_type', 'registration_number', 'country_registered', 'dob_or_incorporation']
     fields[i++] = ['mailing_address', 'phone', 'auth_email', 'website']
     if (entityType !== 'Individual') fields[i++] = ['authorized_name', 'title', 'passport_number', 'authorized_contact']
@@ -167,15 +121,18 @@ export default function CISForm() {
 
   const nextStep = async () => {
     const valid = await trigger(stepFields[step])
-    if (valid) setStep((s) => s + 1)
+    if (valid) {
+      setMessage('')
+      setStep((s) => s + 1)
+    }
   }
 
   const backStep = () => {
-    // Reset files when going back from the last step
     if (step === fullSteps.length - 1) {
-    setValue('passport_file', undefined as unknown as File)
+      setValue('passport_file', undefined as unknown as File)
       setValue('certificate_file', undefined)
     }
+    setMessage('')
     setStep((s) => Math.max(0, s - 1))
   }
 
@@ -183,52 +140,61 @@ export default function CISForm() {
     setSubmitting(true)
     setMessage('')
 
-    const formData = new FormData()
-    
-    formData.append('_wpcf7', '13')
-    formData.append('_wpcf7_version', '5.9.3')
-    formData.append('_wpcf7_locale', 'en_US')
-    formData.append('_wpcf7_unit_tag', 'wpcf7-f13-o1')
-    formData.append('_wpcf7_container_post', '0')
-    formData.append('company-name', data.company_name)
-    formData.append('entity-type', data.entity_type)
-    formData.append('registration-number', data.registration_number || '')
-    formData.append('country-registered', data.country_registered)
-    formData.append('dob-or-incorporation', data.dob_or_incorporation)
-    formData.append('mailing-address', data.mailing_address)
-    formData.append('phone', data.phone)
-    formData.append('auth-email', data.auth_email)
-    formData.append('website', data.website || '')
-    formData.append('authorized-name', data.authorized_name || '')
-    formData.append('title', data.title || '')
-    formData.append('passport-number', data.passport_number || '')
-    formData.append('authorized-contact', data.authorized_contact || '')
-    formData.append('bank-name', data.bank_name)
-    formData.append('bank-address', data.bank_address)
-    formData.append('bank-account-name', data.bank_account_name)
-    formData.append('iban', data.iban)
-    formData.append('swift-code', data.swift_code)
-    formData.append('business-type', data.business_type)
-    formData.append('description', data.description)
-    formData.append('trading-experience', data.trading_experience || '')
-    formData.append('passport-file', data.passport_file)
-
-    if (data.certificate_file) {
-      formData.append('certificate-file', data.certificate_file)
+    const isValid = await trigger()
+    if (!isValid) {
+      const firstError = Object.keys(errors)[0]
+      const el = document.querySelector(`[name="${firstError}"]`) as HTMLElement
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        el.focus()
+      }
+      setMessage('❌ Please complete all required fields for your entity type.')
+      setSubmitting(false)
+      return
     }
 
+    const formData = new FormData()
+    Object.entries({
+      '_wpcf7': '13',
+      '_wpcf7_version': '5.9.3',
+      '_wpcf7_locale': 'en_US',
+      '_wpcf7_unit_tag': 'wpcf7-f13-o1',
+      '_wpcf7_container_post': '0',
+      'company-name': data.company_name,
+      'entity-type': data.entity_type,
+      'registration-number': data.registration_number || '',
+      'country-registered': data.country_registered,
+      'dob-or-incorporation': data.dob_or_incorporation,
+      'mailing-address': data.mailing_address,
+      'phone': data.phone,
+      'auth-email': data.auth_email,
+      'website': data.website || '',
+      'authorized-name': data.authorized_name || '',
+      'title': data.title || '',
+      'passport-number': data.passport_number || '',
+      'authorized-contact': data.authorized_contact || '',
+      'bank-name': data.bank_name,
+      'bank-address': data.bank_address,
+      'bank-account-name': data.bank_account_name,
+      'iban': data.iban,
+      'swift-code': data.swift_code,
+      'business-type': data.business_type,
+      'description': data.description,
+      'trading-experience': data.trading_experience || '',
+    }).forEach(([key, val]) => formData.append(key, val))
+
+    formData.append('passport-file', data.passport_file)
+    if (data.certificate_file) formData.append('certificate-file', data.certificate_file)
+
     try {
-      const response = await fetch('https://nchsltdadmin.com/wp-json/contact-form-7/v1/contact-forms/13/feedback', {
+      const res = await fetch('https://nchsltdadmin.com/wp-json/contact-form-7/v1/contact-forms/13/feedback', {
         method: 'POST',
         body: formData,
       })
-
-      const result = await response.json()
-      if (result.status === 'mail_sent') {
-        setMessage('✅ Form submitted successfully!')
-      } else {
-        setMessage('❌ Submission failed: ' + result.message)
-      }
+      const result = await res.json()
+      setMessage(result.status === 'mail_sent'
+        ? '✅ Form submitted successfully!'
+        : '❌ Submission failed: ' + result.message)
     } catch (err) {
       console.error(err)
       setMessage('❌ Network error')
@@ -298,7 +264,6 @@ export default function CISForm() {
             <FileInputGroup label="Certificate File" field="certificate_file" />
           </>
         ) : null}
-
         <div className="flex justify-between pt-4">
           {step > 0 && <Button type="button" onClick={backStep}>Back</Button>}
           {step < fullSteps.length - 1 ? (
@@ -362,9 +327,7 @@ function SelectGroup({ label, field, options }: {
         </SelectTrigger>
         <SelectContent>
           {options.map((opt) => (
-            <SelectItem key={opt} value={opt}>
-              {opt}
-            </SelectItem>
+            <SelectItem key={opt} value={opt}>{opt}</SelectItem>
           ))}
         </SelectContent>
       </Select>
