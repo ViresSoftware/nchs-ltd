@@ -73,7 +73,7 @@ export default function CISForm() {
 
   const stepFields: Record<number, (keyof FormSchema)[]> = {
     0: ['company_name', 'entity_type', 'registration_number', 'country_registered', 'dob_or_incorporation'],
-    1: ['mailing_address', 'phone', 'auth_email', 'website'], // ✅ Updated
+    1: ['mailing_address', 'phone', 'auth_email', 'website'],
     2: ['authorized_name', 'title', 'passport_number', 'authorized_contact'],
     3: ['bank_name', 'bank_address', 'bank_account_name', 'iban', 'swift_code'],
     4: ['business_type', 'description', 'trading_experience'],
@@ -87,7 +87,7 @@ export default function CISForm() {
     formData.append('form', JSON.stringify(data))
 
     try {
-      const response = await fetch('http://localhost:5000/submit-cis', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/submit-cis`, {
         method: 'POST',
         body: formData,
       })
