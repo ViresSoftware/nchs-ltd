@@ -3,18 +3,24 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { neon } from '@neondatabase/serverless'
 import dotenv from 'dotenv'
+import { createClient } from '@supabase/supabase-js'
 const nodemailer = require('nodemailer')
 
 dotenv.config()
 
 const sql = neon(process.env.DATABASE_URL as string)
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
 const app = new Hono()
 
 // Enable CORS
 app.use('/submit-cis', cors())
 app.use('/submit-contact', cors())
 
-// 🔑 Configure Nodemailer
+// Nodemailer Transporter
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 465,
@@ -25,15 +31,42 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-// 📄 CIS FORM HANDLER
+// Utility: Upload file to Supabase Storage
+const uploadToSupabase = async (file: File, folder: string) => {
+  const buffer = Buffer.from(await file.arrayBuffer())
+  const filePath = `${folder}/${Date.now()}_${file.name}`
+  const { error } = await supabase.storage
+    .from('cis-uploads')
+    .upload(filePath, buffer, {
+      contentType: file.type,
+      upsert: false,
+    })
+
+  if (error) throw new Error('Upload failed: ' + error.message)
+
+  const { data } = supabase.storage
+    .from('cis-uploads')
+    .getPublicUrl(filePath)
+
+  return data.publicUrl
+}
+
+// 📄 CIS Form Submission
 app.post('/submit-cis', async (c) => {
   try {
     const formData = await c.req.formData()
     const json = formData.get('form')?.toString()
     const data = JSON.parse(json || '{}')
 
-    const passport_file_url = 'https://example.com/passport.pdf'
-    const certificate_file_url = 'https://example.com/certificate.pdf'
+    const passport = formData.get('passport')
+    const certificate = formData.get('certificate')
+
+    if (!(passport instanceof File) || !(certificate instanceof File)) {
+      return c.json({ success: false, error: 'Missing or invalid file(s)' }, 400)
+    }
+
+    const passportUrl = await uploadToSupabase(passport, 'passport')
+    const certificateUrl = await uploadToSupabase(certificate, 'certificate')
 
     await sql`
       INSERT INTO cis_submissions (
@@ -49,66 +82,25 @@ app.post('/submit-cis', async (c) => {
         ${data.authorized_name}, ${data.title}, ${data.passport_number}, ${data.authorized_contact},
         ${data.bank_name}, ${data.bank_address}, ${data.bank_account_name}, ${data.iban}, ${data.swift_code},
         ${data.business_type}, ${data.description}, ${data.trading_experience},
-        ${passport_file_url}, ${certificate_file_url}
+        ${passportUrl}, ${certificateUrl}
       )
     `
 
-    // ✉️ Send email
     await transporter.sendMail({
       from: `"NCHS CIS Form" <${process.env.MAIL_USER}>`,
       to: 'info@nchsltd.com',
       subject: 'New CIS Form Submission',
       html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-          <h2 style="color: #004085;">New CIS Form Submission</h2>
-          <h3>1. Basic Identification</h3>
-          <ul>
-            <li><strong>Company Name:</strong> ${data.company_name}</li>
-            <li><strong>Entity Type:</strong> ${data.entity_type}</li>
-            <li><strong>Registration Number:</strong> ${data.registration_number}</li>
-            <li><strong>Country Registered:</strong> ${data.country_registered}</li>
-            <li><strong>DOB/Incorporation:</strong> ${data.dob_or_incorporation}</li>
-          </ul>
-
-          <h3>2. Contact Information</h3>
-          <ul>
-            <li><strong>Mailing Address:</strong> ${data.mailing_address}</li>
-            <li><strong>Phone:</strong> ${data.phone}</li>
-            <li><strong>Email:</strong> ${data.auth_email}</li>
-            <li><strong>Website:</strong> ${data.website || 'N/A'}</li>
-          </ul>
-
-          <h3>3. Authorized Signatory</h3>
-          <ul>
-            <li><strong>Name:</strong> ${data.authorized_name}</li>
-            <li><strong>Title:</strong> ${data.title}</li>
-            <li><strong>Passport Number:</strong> ${data.passport_number}</li>
-            <li><strong>Authorized Contact:</strong> ${data.authorized_contact}</li>
-          </ul>
-
-          <h3>4. Banking Details</h3>
-          <ul>
-            <li><strong>Bank Name:</strong> ${data.bank_name}</li>
-            <li><strong>Bank Address:</strong> ${data.bank_address}</li>
-            <li><strong>Account Name:</strong> ${data.bank_account_name}</li>
-            <li><strong>IBAN:</strong> ${data.iban}</li>
-            <li><strong>SWIFT Code:</strong> ${data.swift_code}</li>
-          </ul>
-
-          <h3>5. Business Info</h3>
-          <ul>
-            <li><strong>Type:</strong> ${data.business_type}</li>
-            <li><strong>Description:</strong> ${data.description}</li>
-            <li><strong>Trading Experience:</strong> ${data.trading_experience || 'N/A'}</li>
-          </ul>
-
-          <h3>6. Documents</h3>
-          <ul>
-            <li><strong>Passport File:</strong> <a href="${passport_file_url}">View Passport</a></li>
-            <li><strong>Certificate File:</strong> <a href="${certificate_file_url}">View Certificate</a></li>
-          </ul>
-        </div>
-      `,
+        <div style="font-family: Arial; padding: 20px;">
+          <h2>New CIS Form Submission</h2>
+          <p><strong>Company:</strong> ${data.company_name}</p>
+          <p><strong>Entity:</strong> ${data.entity_type}</p>
+          <p><strong>Registration #:</strong> ${data.registration_number}</p>
+          <p><strong>Authorized:</strong> ${data.authorized_name}</p>
+          <p><strong>Email:</strong> ${data.auth_email}</p>
+          <p><strong>Passport File:</strong> <a href="${passportUrl}">View</a></p>
+          <p><strong>Certificate File:</strong> <a href="${certificateUrl}">View</a></p>
+        </div>`
     })
 
     return c.json({ success: true })
@@ -117,7 +109,7 @@ app.post('/submit-cis', async (c) => {
   }
 })
 
-// 📩 CONTACT FORM HANDLER
+// 📩 Contact Form Submission
 app.post('/submit-contact', async (c) => {
   try {
     const { first_name, last_name, email, message } = await c.req.json()
@@ -127,21 +119,17 @@ app.post('/submit-contact', async (c) => {
       VALUES (${first_name}, ${last_name}, ${email}, ${message})
     `
 
-    // ✉️ Email for contact form
     await transporter.sendMail({
       from: `"NCHS Contact Form" <${process.env.MAIL_USER}>`,
       to: 'info@nchsltd.com',
       subject: 'New Contact Form Submission',
       html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-          <h2 style="color: #004085;">New Support Message</h2>
-          <div>
-            <p><strong>Name:</strong> ${first_name} ${last_name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Message:</strong> ${message}</p>
-          </div>
-        </div>
-      `,
+        <div style="font-family: Arial; padding: 20px;">
+          <h2>New Support Message</h2>
+          <p><strong>Name:</strong> ${first_name} ${last_name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Message:</strong> ${message}</p>
+        </div>`
     })
 
     return c.json({ success: true })
@@ -150,7 +138,7 @@ app.post('/submit-contact', async (c) => {
   }
 })
 
-// Start server with async wrapper
+// 🚀 Start the server
 const main = async () => {
   const PORT = Number(process.env.PORT) || 5000
   const HOST = process.env.HOST || 'localhost'

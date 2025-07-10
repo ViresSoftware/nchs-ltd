@@ -15,27 +15,34 @@ export default function ContactForm() {
     setLoading(true);
 
     const form = e.currentTarget;
-    const data = {
-      first_name: (form.elements.namedItem("first-name") as HTMLInputElement).value,
-      last_name: (form.elements.namedItem("last-name") as HTMLInputElement).value,
-      email: (form.elements.namedItem("email") as HTMLInputElement).value,
-      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
-    };
+
+    const formData = new FormData();
+
+    // Required hidden fields for CF7 (use actual values from your live form)
+    formData.append('_wpcf7', '14');
+    formData.append('_wpcf7_version', '5.9.3'); // Adjust to match your Contact Form 7 version
+    formData.append('_wpcf7_locale', 'en_US');
+    formData.append('_wpcf7_unit_tag', 'wpcf7-f14-o1'); // Inspect form source to get the correct unit tag
+    formData.append('_wpcf7_container_post', '0');
+
+    // Append form field values with exact field names used in CF7
+    formData.append('first-name', (form.elements.namedItem("first-name") as HTMLInputElement).value);
+    formData.append('last-name', (form.elements.namedItem("last-name") as HTMLInputElement).value);
+    formData.append('email', (form.elements.namedItem("email") as HTMLInputElement).value);
+    formData.append('message', (form.elements.namedItem("message") as HTMLTextAreaElement).value);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/submit-contact`, {
+      const res = await fetch(`https://nchsltdadmin.com/wp-json/contact-form-7/v1/contact-forms/14/feedback`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        body: formData,
       });
 
       const result = await res.json();
-      if (result.success) {
+
+      if (result.status === "mail_sent") {
         setSubmitted(true);
       } else {
-        alert("❌ Submission failed: " + result.error);
+        alert("❌ Submission failed: " + result.message);
       }
     } catch (err) {
       alert("❌ Network error");
