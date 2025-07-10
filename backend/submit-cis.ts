@@ -56,7 +56,7 @@ app.post('/submit-cis', async (c) => {
     // ✉️ Send email
     await transporter.sendMail({
       from: `"NCHS CIS Form" <${process.env.MAIL_USER}>`,
-      to: 'dev@viressoftware.com',
+      to: 'info@nchsltd.com',
       subject: 'New CIS Form Submission',
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
@@ -134,12 +134,12 @@ app.post('/submit-contact', async (c) => {
       subject: 'New Contact Form Submission',
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-          <h2 style="color: #004085;">New Contact Message</h2>
-          <ul>
-            <li><strong>Name:</strong> ${first_name} ${last_name}</li>
-            <li><strong>Email:</strong> ${email}</li>
-            <li><strong>Message:</strong> <p>${message}</p></li>
-          </ul>
+          <h2 style="color: #004085;">New Support Message</h2>
+          <div>
+            <p><strong>Name:</strong> ${first_name} ${last_name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Message:</strong> ${message}</p>
+          </div>
         </div>
       `,
     })

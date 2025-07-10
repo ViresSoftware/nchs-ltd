@@ -113,8 +113,8 @@ export default function CISForm() {
         <p className="text-2xl font-bold">
           {step === 0 && '1. Basic Identification'}
           {step === 1 && '2. Contact Information'}
-          {step === 2 && '3. Authorized Signatory Information (for companies)'}
-          {step === 3 && '4. Banking Details (sometimes required)'}
+          {step === 2 && '3. Authorized Signatory Information'}
+          {step === 3 && '4. Banking Details'}
           {step === 4 && '5. Business Information'}
           {step === 5 && '6. Identification Documents'}
         </p>
