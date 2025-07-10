@@ -130,7 +130,7 @@ app.post('/submit-contact', async (c) => {
     // ✉️ Email for contact form
     await transporter.sendMail({
       from: `"NCHS Contact Form" <${process.env.MAIL_USER}>`,
-      to: 'dev@viressoftware.com',
+      to: 'info@nchsltd.com',
       subject: 'New Contact Form Submission',
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
