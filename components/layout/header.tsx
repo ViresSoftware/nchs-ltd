@@ -78,8 +78,8 @@ export default function Header() {
           className="bg-black ml-4 hidden lg:inline-flex flex-row items-center justify-between"
           onClick={() => setLoginDialogOpen(true)}
         >
+          <Lock size={18} className="mr-1" />
           <span>Secure Login</span>
-          <Lock size={18} className="ml-2" />
         </Button>
 
         {/* Mobile Menu Toggle */}
@@ -102,8 +102,8 @@ export default function Header() {
             className="bg-black w-full justify-between"
             onClick={() => setLoginDialogOpen(true)}
           >
+            <Lock size={18} className="mr-1" />
             <span>Secure Login</span>
-            <Lock size={18} className="ml-2" />
           </Button>
         </div>
       )}

@@ -17,14 +17,15 @@ export default function Hero() {
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
         <Image
-          src="/bank-vault-gold-bitcoin.jpg"
+          src="/bank-vault-door-open-gold-cash.jpg"
           alt="Secure Vault"
           fill
           className="object-cover z-0"
           priority
         />
       </div>
-
+      {/* Optional dark overlay */}
+      <div className="absolute inset-0 bg-black/50 z-[1]" />
       {/* Overlay Content */}
       <div className="text-white relative z-10 px-6 max-w-xl lg:max-w-2xl text-white">
         <h1 className="text-4xl sm:text-5xl lg:text-7xl font-playfair font-semibold mb-4">NCHS LTD</h1>
@@ -38,8 +39,6 @@ export default function Hero() {
         </Link>
       </div>
 
-      {/* Optional dark overlay */}
-      <div className="absolute inset-0 bg-black/75 z-[1]" />
     </motion.section>
   );
 }
