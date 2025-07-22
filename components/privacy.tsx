@@ -1,8 +1,30 @@
 "use client";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 
 export default function Privacy() {
+  const privacy_items = [
+    {
+      image: "/confidential-notice.jpg",
+      alt: "Confidentiality Notice",
+      title: "CONFIDENTIALITY NOTICE",
+      description: "This site and all communications are monitored. Unauthorized access or misrepresentation is strictly prohibited.",
+    },
+    {
+      image: "/security.jpg",
+      alt: "Compliance & Security",
+      title: "COMPLIANCE & SECURITY",
+      description: "We follow strict global compliance protocols (AML/KYC/Asset verification).",
+    },
+    {
+      image: "/legal-notice.jpg",
+      alt: "Legal Notice",
+      title: "LEGAL NOTICE",
+      description: "Fraudulent activity will be reported to the FBI, SEC, INTERPOL, and relevant authorities.",
+    },
+  ];
+
   return (
     <motion.section
       id="privacy"
@@ -22,30 +44,21 @@ export default function Privacy() {
           Your trust is protected under institutional-grade security and legal compliance.
         </p>
         <div className="grid gap-4 lg:gap-6 md:grid-cols-3 max-w-6xl mx-auto">
-          <Card className="bg-[url('/confidential-notice.jpg')] bg-cover bg-center bg-card text-card-foreground flex flex-col gap-6 rounded-xl border shadow-sm py-0">
-            <CardContent className="p-6 space-y-2 text-white bg-black/70 py-2  lg:py-8 rounded-xl h-full">
-              <h3 className="font-semibold text-base font-playfair">CONFIDENTIALITY NOTICE</h3>
-              <p className="text-sm">
-                This site and all communications are monitored. Unauthorized access or misrepresentation is strictly prohibited.
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="bg-[url('/security.jpg')] bg-cover bg-center bg-card text-card-foreground flex flex-col gap-6 rounded-xl border shadow-sm py-0">
-            <CardContent className="p-6 space-y-2 text-white bg-black/70 py-2 lg:py-8 rounded-xl h-full">
-              <h3 className="font-semibold text-base font-playfair">COMPLIANCE & SECURITY</h3>
-              <p className="text-sm">
-                We follow strict global compliance protocols (AML/KYC/Asset verification).
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="bg-[url('/legal-notice.jpg')] bg-cover bg-center bg-card text-card-foreground flex flex-col gap-6 rounded-xl border shadow-sm py-0">
-            <CardContent className="p-6 space-y-2 text-white bg-black/70 py-2  lg:py-8 rounded-xl h-full">
-              <h3 className="font-semibold text-base font-playfair">LEGAL NOTICE</h3>
-              <p className="text-sm">
-                Fraudulent activity will be reported to the FBI, SEC, INTERPOL, and relevant authorities.
-              </p>
-            </CardContent>
-          </Card>
+          {privacy_items.map(({ image, alt, title, description }) => (
+            <Card key={title} className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border shadow-sm overflow-hidde p-0 gap-0 border-none">
+              <Image
+                src={image}
+                alt={alt}
+                width={600}
+                height={300}
+                className="w-full object-cover h-48"
+              />
+              <CardContent className="p-6 space-y-2 text-white bg-black/70 lg:py-8 h-full">
+                <h3 className="font-semibold text-base font-playfair">{title}</h3>
+                <p className="text-sm">{description}</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </motion.section>
