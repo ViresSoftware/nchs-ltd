@@ -3,6 +3,7 @@ import "./globals.css";
 import Footer from "@/components/layout/footer";
 import { ThemeProvider } from "next-themes";
 import { Inter, Playfair_Display } from "next/font/google";
+import { RestrictionProvider } from "@/context/RestrictionContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,9 +35,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           enableSystem={false}
           disableTransitionOnChange
         >
-          <Header />
-          <main className="font-inter">{children}</main>
-          <Footer />
+          <RestrictionProvider>
+            {/* <RestrictedContent/> */}
+            <Header />
+            <main className="font-inter">{children}</main>
+            <Footer />            
+          </RestrictionProvider>
         </ThemeProvider>
       </body>
     </html>

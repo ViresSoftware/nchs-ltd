@@ -141,3 +141,59 @@ button,
 label {
   cursor: pointer;
 }
+
+.neon-gold-btn {
+  display: inline-block;
+  position: relative;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #fff8d2;
+  background: linear-gradient(145deg, #b28f3f, #fcd770);
+  border: 2px solid #fcd770;
+  border-right: 4px solid #fcd770;
+  box-shadow: 0 0 12px #fcd770aa, 0 0 24px #fcd77066;
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 95% 100%, 0 100%);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  font-family: 'Orbitron', sans-serif;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.neon-gold-btn span {
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 0 8px #fff6bf, 0 0 16px #fcd770aa;
+}
+
+.neon-gold-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(252, 215, 112, 0.4) 0%, transparent 70%);
+  z-index: 1;
+}
+
+.neon-gold-btn:hover {
+  box-shadow: 0 0 24px #fcd770, 0 0 48px #fcd770aa;
+  transform: translateY(-2px);
+}
+
+.neon-gold-btn .locked {
+  display: inline-block;
+}
+
+.neon-gold-btn .unlocked {
+  display: none;
+}
+
+.neon-gold-btn:hover .locked,
+.neon-gold-btn:focus .locked {
+  display: none;
+}
+
+.neon-gold-btn:hover .unlocked,
+.neon-gold-btn:focus .unlocked {
+  display: inline-block;
+}
+
