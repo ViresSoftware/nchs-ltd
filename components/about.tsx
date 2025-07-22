@@ -29,7 +29,6 @@ export default function AboutNCHS() {
           <li>Private custodial partnerships</li>
           <li>High-yield and reserve-tier structuring</li>
         </ul>
-
         <h4 className="text-lg font-semibold font-playfair mt-6">Energy & Refined Commodities</h4>
         <p>
           NCHS LTD maintains access to validated allocations of crude oil, Jet A1, D2/D6, LNG, and LPG.
@@ -39,7 +38,6 @@ export default function AboutNCHS() {
           <li>Sovereign and institutional-level engagement</li>
           <li>No open market or speculative sales</li>
         </ul>
-
         <h4 className="text-lg font-semibold font-playfair mt-6">Digital Assets & Cryptocurrency</h4>
         <p>
           Secure channels for Bitcoin (BTC), Stablecoin transactions, and custodial positioning.
@@ -49,7 +47,6 @@ export default function AboutNCHS() {
           <li>Multi-asset custodial structuring</li>
           <li>Smart contract and compliance verification</li>
         </ul>
-
         <h4 className="text-lg font-semibold font-playfair mt-6">AI Systems & Data Infrastructure</h4>
         <p>
           Co-developing AI optimization for energy infrastructure, logistics, and data security systems.

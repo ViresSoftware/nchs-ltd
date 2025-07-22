@@ -135,3 +135,9 @@
 .bg-card {
     background-color: #171717;
 }
+
+a,
+button,
+label {
+  cursor: pointer;
+}

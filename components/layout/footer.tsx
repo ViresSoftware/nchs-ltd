@@ -11,7 +11,7 @@ export default function Footer() {
           <Link href="/#hero" scroll={true}>
             <Image src={logo} alt="NCHS LTD Logo" width={130} height={40} priority />
           </Link>
-          <p className="text-muted-foreground text-xs mt-[-10px] mx-auto">Established 2020</p>
+          <p className="font-playfair text-muted-foreground text-xs mt-[-10px] mx-auto">Established 2020</p>
         </div>
         <nav className="text-md font-medium text-muted-foreground flex flex-col sm:flex-row sm:gap-6 sm:items-center">
           <Link href="/#hero" scroll={true} className="block hover:text-[#b28f3f]">Home</Link>

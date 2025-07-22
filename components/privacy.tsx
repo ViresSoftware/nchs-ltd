@@ -10,9 +10,11 @@ export default function Privacy() {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
-      className="py-10 lg:py-20 px-4 bg-card relative bg-[url('/dot-grid-pattern.png')] bg-repeat"
+      className="py-16 lg:py-32 px-4 bg-card relative bg-[url('/dot-grid-pattern.png')] bg-repeat"
       style={{ backgroundSize: '64px' }}
     >
+      <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-black to-transparent z-0" />
+      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-black to-transparent z-0" />
       <div className="absolute inset-0 bg-black/50 z-0" />
       <div className="max-w-4xl mx-auto text-center mb-10 relative z-10">
         <h2 className="text-3xl font-playfair mb-4">Privacy Protocols & Disclaimers</h2>
