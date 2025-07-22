@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { ShieldCheck, Lock } from "lucide-react";
 
 export default function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
@@ -55,9 +56,11 @@ export default function ContactForm() {
     <section id="contact" className="py-10 lg:py-20 px-4">
       <div className="max-w-2xl mx-auto space-y-8 text-center">
         <h2 className="text-3xl font-playfair">Initiate Private Inquiry</h2>
-
         {submitted ? (
-          <p className="text-green-500">Your message has been received. We respond only to verified parties.</p>
+          <div className="flex items-start bg-green-900 text-green-100 border border-green-600 px-4 py-3 rounded-lg space-x-3">
+            <ShieldCheck className="h-5 w-5 mr-2"/>
+            <p className="text-sm">Your message has been received. We respond only to verified parties.</p>
+          </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6 text-left">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -88,7 +91,7 @@ export default function ContactForm() {
               className="w-full text-black"
               disabled={loading}
             >
-              {loading ? "Sending..." : "Send Secure Message"}
+              <Lock size={18} className="mr-1" /> {loading ? "Sending..." : "Send Secure Message"}
             </Button>
           </form>
         )}

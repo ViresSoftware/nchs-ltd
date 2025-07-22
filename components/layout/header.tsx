@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import logo from "@/public/logo-horizontal.png";
-import { Menu, X, Lock } from "lucide-react"; // for toggle icons
+import { Menu, X, Lock } from "lucide-react";
 import LoginForm from "../form/Login";
 
 export default function Header() {
@@ -48,6 +48,14 @@ export default function Header() {
     return () => document.removeEventListener("click", handleSmoothScroll);
   }, []);
 
+  const navItems = [
+    { href: "/about", label: "About" },
+    { href: "/#commodities", label: "Offerings" },
+    { href: "/#privacy", label: "Protocols" },
+    { href: "/#contact", label: "Inquiry" },
+    { href: "/client-information-sheet", label: "Client Information sheet" },
+  ];
+
   return (
     <header
       id="main-header"
@@ -63,12 +71,11 @@ export default function Header() {
         </Link>
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center space-x-6 text-sm font-medium">
-          {/* <Link href="#hero" scroll={true} className="hover:text-[#b28f3f]">Home</Link> */}
-          <Link href="/about" scroll={true} className="hover:text-[#b28f3f]">About</Link>
-          <Link href="/#commodities" scroll={true} className="hover:text-[#b28f3f]">Offerings</Link>
-          <Link href="/#privacy" scroll={true} className="hover:text-[#b28f3f]">Protocols</Link>
-          <Link href="/#contact" scroll={true} className="hover:text-[#b28f3f]">Inquiry</Link>
-          <Link href="/client-information-sheet" scroll={true} className="block hover:text-[#b28f3f]">Client Information sheet</Link>
+          {navItems.map(({ href, label }) => (
+            <Link key={href} href={href} scroll={true} className="font-playfair hover:text-[#b28f3f]">
+              {label}
+            </Link>
+          ))}
         </nav>
 
         {/* Secure Login (Desktop) */}
