@@ -36,16 +36,24 @@ const schema = z.object({
   title: z.string().optional(),
   passport_number: z.string().optional(),
   authorized_contact: z.string().optional(),
-  bank_name: z.string().min(1, 'Bank name is required'),
-  bank_address: z.string().min(1, 'Bank address is required'),
-  bank_account_name: z.string().min(1, 'Account name is required'),
-  iban: z.string().min(1, 'IBAN is required'),
-  swift_code: z.string().min(1, 'SWIFT code is required'),
   business_type: z.string().min(1, 'Business type is required'),
   description: z.string().min(1, 'Description is required'),
   trading_experience: z.string().optional(),
-  passport_file: z.instanceof(File, { message: 'Passport file is required' }),
-  certificate_file: z.instanceof(File).optional(),
+  passport_file: z
+    .custom<File>((file) => {
+      if (!(file instanceof File)) return false
+      const allowed = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+      return allowed.includes(file.type)
+    }, { message: 'Passport file must be a PDF or Word document' }),
+
+  certificate_file: z
+    .custom<File>((file) => {
+      if (!(file instanceof File)) return true // allow optional
+      const allowed = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+      return allowed.includes(file.type)
+    }, { message: 'Certificate must be a PDF or Word document' })
+    .optional()
+
 }).superRefine((data, ctx) => {
   if (data.entity_type === 'Company') {
     const requiredFields = [
@@ -102,7 +110,6 @@ export default function CISForm() {
     'Basic Identification',
     'Contact Information',
     ...(entityType === 'Individual' ? [] : ['Authorized Signatory']),
-    'Banking Details',
     'Business Info',
     'Document Uploads',
   ], [entityType])
@@ -113,7 +120,6 @@ export default function CISForm() {
     fields[i++] = ['company_name', 'entity_type', 'registration_number', 'country_registered', 'dob_or_incorporation']
     fields[i++] = ['mailing_address', 'phone', 'auth_email', 'website']
     if (entityType !== 'Individual') fields[i++] = ['authorized_name', 'title', 'passport_number', 'authorized_contact']
-    fields[i++] = ['bank_name', 'bank_address', 'bank_account_name', 'iban', 'swift_code']
     fields[i++] = ['business_type', 'description', 'trading_experience']
     fields[i++] = ['passport_file', 'certificate_file']
     return fields
@@ -173,11 +179,6 @@ export default function CISForm() {
       'title': data.title || '',
       'passport-number': data.passport_number || '',
       'authorized-contact': data.authorized_contact || '',
-      'bank-name': data.bank_name,
-      'bank-address': data.bank_address,
-      'bank-account-name': data.bank_account_name,
-      'iban': data.iban,
-      'swift-code': data.swift_code,
       'business-type': data.business_type,
       'description': data.description,
       'trading-experience': data.trading_experience || '',
@@ -238,16 +239,6 @@ export default function CISForm() {
 
         {(step === 2 && entityType === 'Individual') || (step === 3 && entityType !== 'Individual') ? (
           <>
-            <InputGroup label="Bank Name" field="bank_name" />
-            <InputGroup label="Bank Address" field="bank_address" />
-            <InputGroup label="Account Name" field="bank_account_name" />
-            <InputGroup label="IBAN" field="iban" />
-            <InputGroup label="SWIFT Code" field="swift_code" />
-          </>
-        ) : null}
-
-        {(step === 3 && entityType === 'Individual') || (step === 4 && entityType !== 'Individual') ? (
-          <>
             <InputGroup label="Business Type" field="business_type" />
             <div>
               <Label>Description</Label>
@@ -258,12 +249,13 @@ export default function CISForm() {
           </>
         ) : null}
 
-        {(step === 4 && entityType === 'Individual') || (step === 5 && entityType !== 'Individual') ? (
+        {(step === 3 && entityType === 'Individual') || (step === 4 && entityType !== 'Individual') ? (
           <>
             <FileInputGroup label="Passport File" field="passport_file" />
             <FileInputGroup label="Certificate File" field="certificate_file" />
           </>
         ) : null}
+
         <div className="flex justify-between pt-4">
           {step > 0 && <Button type="button" onClick={backStep}>Back</Button>}
           {step < fullSteps.length - 1 ? (
@@ -300,6 +292,7 @@ function FileInputGroup({ label, field }: { label: string, field: keyof FormSche
       <Input
         className="mt-2"
         type="file"
+        accept=".pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         onChange={(e) => {
           const file = e.target.files?.[0]
           setValue(field, file)
