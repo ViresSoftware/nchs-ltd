@@ -44,7 +44,7 @@ export default function EmailVerificationPopup() {
           <Input
             type="email"
             value={email}
-            placeholder="your@example.com"
+            placeholder="Email Address"
             onChange={(e) => setEmail(e.target.value)}
             required
           />
