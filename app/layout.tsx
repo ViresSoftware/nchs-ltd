@@ -1,3 +1,4 @@
+import Script from "next/script";
 import Header from "@/components/layout/header";
 import "./globals.css";
 import Footer from "@/components/layout/footer";
@@ -29,6 +30,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="bg-black text-white">
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-VCKJB3J6F0" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-VCKJB3J6F0');
+          `}
+        </Script>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
