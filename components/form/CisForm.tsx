@@ -42,9 +42,17 @@ const schema = z.object({
   passport_file: z
     .custom<File>((file) => {
       if (!(file instanceof File)) return false
-      const allowed = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+      const allowed = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'image/jpeg',
+        'image/png',
+        'image/jpg',
+        'image/heic',
+      ]
       return allowed.includes(file.type)
-    }, { message: 'Passport file must be a PDF or Word document' }),
+    }, { message: 'Passport file must be a PDF, Word document, or image (JPG, PNG, HEIC)' }),
 
   certificate_file: z
     .custom<File>((file) => {
@@ -292,7 +300,11 @@ function FileInputGroup({ label, field }: { label: string, field: keyof FormSche
       <Input
         className="mt-2"
         type="file"
-        accept=".pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        accept={
+          field === 'passport_file'
+            ? '.pdf,.doc,.docx,.jpg,.jpeg,.png,.heic,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png,image/jpg,image/heic'
+            : '.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        }
         onChange={(e) => {
           const file = e.target.files?.[0]
           setValue(field, file)
