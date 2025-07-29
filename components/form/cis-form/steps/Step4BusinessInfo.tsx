@@ -15,8 +15,8 @@ export default function Step4BusinessInfo() {
       <div>
         <Label>Description</Label>
         <Textarea className="mt-2" {...register('description')} />
-        {errors.description && (
-          <p className="text-red-500">{errors.description.message}</p>
+        {errors.description?.message && (
+          <p className="text-red-500">{String(errors.description.message)}</p>
         )}
       </div>
       <InputGroup label="Trading Experience" field="trading_experience" />
