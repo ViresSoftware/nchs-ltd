@@ -1,4 +1,4 @@
-import CISForm from "@/components/form/CisForm";
+import CISForm from "@/components/form/cis-form/CisForm";
 
 
 export default function Cis() {
