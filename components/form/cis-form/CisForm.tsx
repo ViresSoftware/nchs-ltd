@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
@@ -14,14 +14,23 @@ import Step5Documents from './steps/Step5Documents'
 
 import { schema, FormSchema } from './schema'
 
+const STORAGE_KEY = 'cis_form_data'
+
 export default function CISForm() {
+  const unsubscribeRef = useRef<() => void | null>(null)
   const [step, setStep] = useState(0)
   const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+
+
+  const storedValues = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null
+  const defaultValues = storedValues ? JSON.parse(storedValues) : undefined
 
   const methods = useForm<FormSchema>({
     resolver: zodResolver(schema),
     mode: 'onTouched',
+    defaultValues,
   })
 
   const {
@@ -43,6 +52,18 @@ export default function CISForm() {
   useEffect(() => {
     setStep(0)
   }, [entityType])
+
+  useEffect(() => {
+    const subscription = watch((value) => {
+      if (!submitted) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
+      }
+    })
+
+    unsubscribeRef.current = subscription.unsubscribe
+
+    return () => subscription.unsubscribe()
+  }, [watch, submitted])
 
   const fullSteps = useMemo(() => [
     'Basic Identification',
@@ -81,6 +102,7 @@ export default function CISForm() {
   }
 
   const onSubmit = async (data: FormSchema) => {
+
     setSubmitting(true)
     setMessage('')
 
@@ -107,7 +129,7 @@ export default function CISForm() {
       formData.append('_wpcf7_unit_tag', 'wpcf7-f13-o1')
       formData.append('_wpcf7_container_post', '0')
 
-      const fieldKey = key.replace(/_/g, '-') // e.g., erc_20_wallet → erc-20-wallet
+      const fieldKey = key.replace(/_/g, '-')
 
       if (val instanceof File) {
         formData.append(fieldKey, val)
@@ -122,9 +144,15 @@ export default function CISForm() {
         body: formData,
       })
       const result = await res.json()
-      setMessage(result.status === 'mail_sent'
-        ? '✅ Form submitted successfully!'
-        : '❌ Submission failed: ' + result.message)
+
+      if (result.status === 'mail_sent') {
+        localStorage.removeItem(STORAGE_KEY)
+        setSubmitted(true) // <--- Prevent future localStorage writes
+        setMessage('✅ Form submitted successfully!')
+        unsubscribeRef.current?.()
+      } else {
+        setMessage('❌ Submission failed: ' + result.message)
+      }
     } catch (err) {
       console.error(err)
       setMessage('❌ Network error')
@@ -156,7 +184,7 @@ export default function CISForm() {
             Please provide a valid ERC-20 or TRC-20 wallet address.
           </p>
         )}
-        
+
         <div className="flex justify-between pt-4">
           {step > 0 && <Button type="button" onClick={backStep}>Back</Button>}
           {step < fullSteps.length - 1 ? (
