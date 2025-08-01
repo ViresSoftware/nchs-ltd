@@ -88,7 +88,7 @@ export default function ContactForm() {
               variant="outline"
               type="submit"
               size="lg"
-              className="w-full text-white"
+              className="w-full text-black"
               disabled={loading}
             >
               <Lock size={18} className="mr-1" /> {loading ? "Sending..." : "Send Secure Message"}
