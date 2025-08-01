@@ -201,7 +201,7 @@ export default function CISForm() {
               disabled={isBusinessStep && !walletValid}
               size="lg"
               variant="outline"
-              className={`${step > 0 ? 'flex-1' : 'w-full'} text-black`}
+              className={`${step > 0 ? 'flex-1' : 'w-full'} bg-white text-black`}
             >
               Next <ArrowRight className="h-5 w-5" />
             </Button>
