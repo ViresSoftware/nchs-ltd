@@ -36,7 +36,7 @@ export default function Commodities() {
       description: "BTC block trades, USDT/USDC transactions via private execution desks.",
     },
     {
-      image: "/fine-arts.jpg",
+      image: "/fine-arts.jpeg",
       alt: "Fine Art",
       title: "Fine Art",
       description: "Discreet acquisition/sale of investment-grade Tier 1 global artworks.",
