@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Rocket } from 'lucide-react'
 
 import Step1BasicInfo from './steps/Step1BasicInfo'
 import Step2Contact from './steps/Step2Contact'
@@ -185,19 +185,34 @@ export default function CISForm() {
           </p>
         )}
 
-        <div className="flex justify-between pt-4">
-          {step > 0 && <Button type="button" onClick={backStep}>Back</Button>}
+        <div className="flex justify-between pt-4 gap-4">
+          {step > 0 && (
+            <Button type="button" onClick={backStep} variant="outline"
+              size="lg"
+              className="bg-gray-400 text-black"
+            >
+              <ArrowLeft className="h-5 w-5" />Back
+            </Button>
+          )}
           {step < fullSteps.length - 1 ? (
             <Button
               type="button"
               onClick={nextStep}
               disabled={isBusinessStep && !walletValid}
+              size="lg"
+              variant="outline"
+              className={`${step > 0 ? 'flex-1' : 'w-full'} bg-white text-black`}
             >
               Next <ArrowRight className="h-5 w-5" />
             </Button>
           ) : (
-            <Button type="submit" disabled={submitting}>
-              {submitting ? 'Submitting...' : 'Submit'}
+            <Button 
+              type="submit" disabled={submitting}
+              size="lg"
+              variant="outline"
+              className={`${step > 0 ? 'flex-1' : 'w-full'} bg-green-500 hover:bg-green-600 border-green-500 text-white`}
+            >
+              <Rocket className="h-5 w-5"/>{submitting ? 'Submitting...' : 'Submit'}
             </Button>
           )}
         </div>

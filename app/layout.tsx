@@ -2,7 +2,6 @@ import Script from "next/script";
 import Header from "@/components/layout/header";
 import "./globals.css";
 import Footer from "@/components/layout/footer";
-import { ThemeProvider } from "next-themes";
 import { Inter, Playfair_Display } from "next/font/google";
 import { RestrictionProvider } from "@/context/RestrictionContext";
 
@@ -40,19 +39,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('config', 'G-VCKJB3J6F0');
           `}
         </Script>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
-          <RestrictionProvider>
-            {/* <RestrictedContent/> */}
-            <Header />
-            <main className="font-inter">{children}</main>
-            <Footer />            
-          </RestrictionProvider>
-        </ThemeProvider>
+        <RestrictionProvider>
+          <Header />
+          <main className="font-inter">{children}</main>
+          <Footer />
+        </RestrictionProvider>
       </body>
     </html>
   );
