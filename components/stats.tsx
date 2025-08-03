@@ -12,9 +12,9 @@ interface Stat {
 }
 
 const STATS: Stat[] = [
-  { value: 100, label: "clients", suffix: "+", color: "blue-400" },
+  { value: 250, label: "clients", suffix: "+", color: "blue-400" },
   { value: 500, label: "million in assets", suffix: "+", color: "green-400" },
-  { value: 2, label: "billion in transactions", suffix: "+", color: "orange-400" },
+  { value: 20, label: "billion in transactions", suffix: "+", color: "orange-400" },
 ];
 
 /**

@@ -6,7 +6,7 @@ import Image from "next/image";
 export default function Privacy() {
   const privacy_items = [
     {
-      image: "/confidential-notice.jpg",
+      image: "/signed-paperwork.jpg",
       alt: "Confidentiality Notice",
       title: "CONFIDENTIALITY NOTICE",
       description: "This site and all communications are monitored. Unauthorized access or misrepresentation is strictly prohibited.",
