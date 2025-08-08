@@ -22,8 +22,6 @@ export default function CISForm() {
   const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-
-
   const storedValues = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null
   const defaultValues = storedValues ? JSON.parse(storedValues) : undefined
 
@@ -42,12 +40,6 @@ export default function CISForm() {
   } = methods
 
   const entityType = watch('entity_type')
-
-  const erc20 = watch('erc_20_wallet')?.trim() || ''
-  const trc20 = watch('trc_20_wallet')?.trim() || ''
-  const ercValid = /^0x[a-fA-F0-9]{40}$/.test(erc20)
-  const trcValid = /^T[a-zA-Z0-9]{33}$/.test(trc20)
-  const walletValid = ercValid || trcValid
 
   useEffect(() => {
     setStep(0)
@@ -179,12 +171,6 @@ export default function CISForm() {
           <Step5Documents />
         ) : null}
 
-        {isBusinessStep && !walletValid && (
-          <p className="text-sm text-red-500 pt-2">
-            Please provide a valid ERC-20 or TRC-20 wallet address.
-          </p>
-        )}
-
         <div className="flex justify-between pt-4 gap-4">
           {step > 0 && (
             <Button type="button" onClick={backStep} variant="outline"
@@ -198,7 +184,7 @@ export default function CISForm() {
             <Button
               type="button"
               onClick={nextStep}
-              disabled={isBusinessStep && !walletValid}
+              disabled={false}
               size="lg"
               variant="outline"
               className={`${step > 0 ? 'flex-1' : 'w-full'} bg-white text-black`}

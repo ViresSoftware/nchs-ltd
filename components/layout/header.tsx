@@ -100,17 +100,18 @@ export default function Header() {
         <div className="lg:hidden text-white px-6 pb-4 space-y-4 font-medium">
           {/* <Link href="#hero" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Home</Link> */}
           <Link href="/about" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>About</Link>
-          <Link href="#commodities" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Offerings</Link>
-          <Link href="#privacy" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Protocols</Link>
-          <Link href="#contact" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Inquiry</Link>
+          <Link href="/#commodities" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Offerings</Link>
+          <Link href="/#privacy" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Protocols</Link>
+          <Link href="/#contact" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Inquiry</Link>
+          <Link href="/client-information-sheet" scroll={true} className="block hover:text-[#b28f3f]" onClick={() => setMenuOpen(false)}>Client Information Sheet</Link>
           <Button
             variant="outline"
             size="lg"
-            className="bg-black w-full justify-between"
+            className="bg-black w-full justify-center"
             onClick={() => setLoginDialogOpen(true)}
           >
             <Lock size={18} className="mr-1" />
-            <span>Secure Login</span>
+            <span className="text-center">Secure Login</span>
           </Button>
         </div>
       )}

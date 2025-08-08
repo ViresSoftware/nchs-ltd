@@ -20,6 +20,7 @@ export default function Step4BusinessInfo() {
         )}
       </div>
       <InputGroup label="Trading Experience" field="trading_experience" />
+      <InputGroup label="BTC Wallet Address" field="btc_wallet" />
       <InputGroup label="ERC-20 Wallet Address" field="erc_20_wallet" />
       <InputGroup label="TRC-20 Wallet Address" field="trc_20_wallet" />
     </>

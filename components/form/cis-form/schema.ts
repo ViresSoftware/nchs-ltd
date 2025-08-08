@@ -3,8 +3,14 @@ import { z } from 'zod'
 export const entityTypes = ['Individual', 'Company'] as const
 
 export const schema = z.object({
-  erc_20_wallet: z.string(),
-  trc_20_wallet: z.string(),
+  erc_20_wallet: z.string().optional(),
+  trc_20_wallet: z.string().optional(),
+  btc_wallet: z.string().optional().refine((val) => {
+    if (!val) return true;
+    return /^([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-zA-HJ-NP-Z0-9]{11,71})$/.test(val);
+  }, {
+    message: 'Enter a valid Bitcoin wallet address',
+  }),
 
   company_name: z.string().min(1, 'Company name is required'),
   entity_type: z.enum(entityTypes, {
@@ -55,19 +61,25 @@ export const schema = z.object({
 
 }).superRefine((data, ctx) => {
   // Wallet logic
-  const ercValid = /^0x[a-fA-F0-9]{40}$/.test(data.erc_20_wallet)
-  const trcValid = /^T[a-zA-Z0-9]{33}$/.test(data.trc_20_wallet)
+  const ercValid = data.erc_20_wallet ? /^0x[a-fA-F0-9]{40}$/.test(data.erc_20_wallet) : false;
+  const trcValid = data.trc_20_wallet ? /^T[a-zA-Z0-9]{33}$/.test(data.trc_20_wallet) : false;
+  const btcValid = data.btc_wallet ? /^([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-zA-HJ-NP-Z0-9]{11,71})$/.test(data.btc_wallet) : false;
 
-  if (!ercValid && !trcValid) {
+  if (!ercValid && !trcValid && !btcValid) {
     ctx.addIssue({
       path: ['erc_20_wallet'],
       code: z.ZodIssueCode.custom,
-      message: 'Enter a valid ERC-20 or TRC-20 wallet address',
+      message: 'Enter a valid ERC-20, TRC-20, or BTC wallet address',
     })
     ctx.addIssue({
       path: ['trc_20_wallet'],
       code: z.ZodIssueCode.custom,
-      message: 'Enter a valid TRC-20 or ERC-20 wallet address',
+      message: 'Enter a valid ERC-20, TRC-20, or BTC wallet address',
+    })
+    ctx.addIssue({
+      path: ['btc_wallet'],
+      code: z.ZodIssueCode.custom,
+      message: 'Enter a valid ERC-20, TRC-20, or BTC wallet address',
     })
   }
 
