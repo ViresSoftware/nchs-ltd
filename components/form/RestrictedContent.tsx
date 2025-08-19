@@ -132,21 +132,23 @@ export default function RestrictedContent({ children }: { children?: React.React
                   required
                 />
               )}
-              <button type="submit" className="neon-gold-btn w-full flex justify-center items-center gap-2" disabled={loading}>
-                {loading ? (
-                  <>⏳ {step === "email" ? "Sending OTP..." : "Verifying..."}</>
-                ) : (
-                  <>
-                    {isVerified ? (
-                      <LockOpen className="h-5 w-5" />
-                    ) : (
-                      <Lock className="h-5 w-5" />
-                    )}
-                    <p className="text-black">
-                      {step === "email" ? "Send OTP" : "Verify OTP"}
-                    </p>
-                  </>
-                )}
+              <button type="submit" className="neon-gold-btn w-full" disabled={loading}>
+                <div className="flex justify-center items-center gap-2">
+                  {loading ? (
+                    <>⏳ {step === "email" ? "Sending OTP..." : "Verifying..."}</>
+                  ) : (
+                    <>
+                      {isVerified ? (
+                        <LockOpen className="h-5 w-5" />
+                      ) : (
+                        <Lock className="h-5 w-5" />
+                      )}
+                      <p className="text-black">
+                        {step === "email" ? "Send OTP" : "Verify OTP"}
+                      </p>
+                    </>
+                  )}
+                </div>
               </button>
               {successMessage && <div className="text-green-400 text-sm font-medium">{successMessage}</div>}
             </form>
