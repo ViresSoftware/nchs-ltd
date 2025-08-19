@@ -3,153 +3,115 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
+// import Image from "next/image";
 import { Lock, LockOpen } from "lucide-react";
-import { Button } from "../ui/button";
 
 export default function RestrictedContent({ children }: { children?: React.ReactNode }) {
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [step, setStep] = useState<"email" | "otp">("email");
-  const [isVerified, setIsVerified] = useState(false);
+  const [isVerified, setIsVerified] = useState(true);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const verified = localStorage.getItem("emailVerified");
-    if (verified === "true") setIsVerified(true);
+    if (verified == "true") {
+      setIsVerified(true);
+    } else {
+      setIsVerified(false);
+    }
   }, []);
 
-  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  const sendOtp = async () => {
-    if (!validateEmail(email)) return alert("❌ Please enter a valid email address.");
-    setLoading(true);
-    try {
-      const res = await axios.post("https://nchsltdadmin.com/wp-json/nchsltd/v1/email-verification", { email });
-      if (res.data.success) {
-        setStep("otp");
-        setSuccessMessage("✅ OTP sent to your email!");
-        setTimeout(() => setSuccessMessage(""), 3000);
-      } else {
-        alert(res.data.message);
-      }
-    } catch {
-      alert("❌ Network error.");
-    } finally {
-      setLoading(false);
-    }
+  const validateEmail = (email: string) => {
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return pattern.test(email);
   };
 
-  const verifyOtp = async () => {
-    if (otp.length !== 6) return alert("❌ Enter 6-digit OTP.");
-    setLoading(true);
-    try {
-      const res = await axios.post("https://nchsltdadmin.com/wp-json/nchsltd/v1/verify-otp", { email, otp });
-      if (res.data.success) {
-        setIsVerified(true);
-        localStorage.setItem("emailVerified", "true");
-        setSuccessMessage("✅ Verified! Submitting to CF7...");
-        await submitToCF7(); // send email to Contact Form 7
-      } else {
-        alert(res.data.message);
-      }
-    } catch {
-      alert("❌ Network error.");
-    } finally {
-      setLoading(false);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!validateEmail(email)) {
+      alert("❌ Please enter a valid email address.");
+      return;
     }
-  };
 
-  const submitToCF7 = async () => {
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("_wpcf7", "14");
+    formData.append("_wpcf7_version", "5.9.3"); // Adjust to match your Contact Form 7 version
+    formData.append("_wpcf7_locale", "en_US");
+    formData.append("_wpcf7_unit_tag", "wpcf7-f14-o1"); // Inspect form source to get the correct unit tag
+    formData.append("_wpcf7_container_post", "0");
+    formData.append("user-email", email); // ✅ Correct field name based on CF7 shortcode
+
     try {
-      const formData = new FormData();
-      formData.append("_wpcf7", "14");
-      formData.append("_wpcf7_version", "5.9.3"); // adjust to match your CF7 version
-      formData.append("_wpcf7_locale", "en_US");
-      formData.append("_wpcf7_unit_tag", "wpcf7-f14-o1");
-      formData.append("_wpcf7_container_post", "0");
-      formData.append("user-email", email); // CF7 field
-
       const res = await axios.post(
         "https://nchsltdadmin.com/wp-json/contact-form-7/v1/contact-forms/55/feedback",
         formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
+      const result = res.data;
 
-      if (res.data.status === "mail_sent") {
+      if (result.status === "mail_sent") {
+        localStorage.setItem("emailVerified", "true");
+        setIsVerified(true);
         setSuccessMessage("✅ Email submitted successfully!");
-        setTimeout(() => setSuccessMessage(""), 3000);
+        setTimeout(() => setSuccessMessage(""), 3000); // Hide after 3 seconds
       } else {
-        alert("❌ CF7 submission failed: " + res.data.message);
+        alert("❌ Submission failed: " + result.message);
       }
-    } catch {
-      alert("❌ CF7 network error.");
+    } catch (error) {
+      alert("❌ Network error");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
+      {/* Always render children (content behind overlay) */}
       <div className={isVerified ? "" : "blur-sm pointer-events-none select-none"}>{children}</div>
+      {/* Overlay on top (only shown if not verified) */}
       {!isVerified && (
         <div
           className="fixed inset-0 z-[9999] text-white flex items-center justify-center"
           style={{ pointerEvents: "auto" }}
         >
           <div className="max-w-md w-full bg-zinc-900 p-8 rounded-lg border border-zinc-700 shadow-md space-y-4 text-center relative z-10">
-            <h2 className="text-xl font-bold">
-              <Lock className="h-5 w-5 mr-2 inline" />
-              {step === "email" ? "Restricted Access" : "Enter OTP"}
-            </h2>
+            <h2 className="text-xl font-bold"><Lock className="h-5 w-5 mr-2 inline" /> Restricted Access</h2>
             <p className="text-sm text-zinc-300">
-              {step === "email"
-                ? "This website content is restricted to legitimate visitors only. Enter a valid email address to receive a verification code."
-                : "Check your email and enter the 6-digit code to access the content."}
+              This website content is restricted to legitimate visitors only. Enter a valid email address to access.
             </p>
-
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                step === "email" ? sendOtp() : verifyOtp();
-              }}
-              className="space-y-4"
-            >
-              {step === "email" && (
-                <Input
-                  type="email"
-                  placeholder="Email Address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="text-white"
-                  required
-                />
-              )}
-              {step === "otp" && (
-                <Input
-                  type="text"
-                  placeholder="OTP Code"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  className="text-white"
-                  required
-                />
-              )}
-              <button type="submit" className="neon-gold-btn w-full flex justify-center items-center gap-2" disabled={loading}>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Input
+                type="email"
+                placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="text-white"
+                required
+              />
+              <button type="submit" className="neon-gold-btn w-full" disabled={loading}>
                 {loading ? (
-                  <>⏳ {step === "email" ? "Sending OTP..." : "Verifying..."}</>
+                  <>⏳ Verifying...</>
                 ) : (
                   <>
-                    {isVerified ? (
-                      <LockOpen className="h-5 w-5" />
+                    {!isVerified ? (
+                      <Lock className="locked h-5 w-5 mr-2 inline" />
                     ) : (
-                      <Lock className="h-5 w-5" />
+                      <LockOpen className="unlocked h-5 w-5 mr-2 inline" />
                     )}
-                    <p className="text-black">
-                      {step === "email" ? "Send OTP" : "Verify OTP"}
-                    </p>
+                    <span className="text-black">Submit</span>
                   </>
                 )}
               </button>
-              {successMessage && <div className="text-green-400 text-sm font-medium">{successMessage}</div>}
+              {successMessage && (
+                <div className="text-green-400 text-sm font-medium">{successMessage}</div>
+              )}
             </form>
           </div>
         </div>
