@@ -12,6 +12,7 @@ export default function RestrictedContent({ children }: { children?: React.React
   const [isVerified, setIsVerified] = useState(false);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // <-- Added for errors
 
   useEffect(() => {
     const verified = localStorage.getItem("emailVerified");
@@ -21,7 +22,11 @@ export default function RestrictedContent({ children }: { children?: React.React
   const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const sendOtp = async () => {
-    if (!validateEmail(email)) return alert("❌ Please enter a valid email address.");
+    setErrorMessage(""); // clear previous errors
+    if (!validateEmail(email)) {
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
     setLoading(true);
     try {
       const res = await axios.post("https://nchsltdadmin.com/wp-json/nchsltd/v1/email-verification", { email });
@@ -30,34 +35,60 @@ export default function RestrictedContent({ children }: { children?: React.React
         setSuccessMessage("✅ OTP sent to your email!");
         setTimeout(() => setSuccessMessage(""), 3000);
       } else {
-        alert(res.data.message);
+        setErrorMessage(`${res.data.message}`);
       }
     } catch {
-      alert("❌ Network error.");
+      setErrorMessage("Network error.");
     } finally {
       setLoading(false);
     }
   };
 
   const verifyOtp = async () => {
-    if (otp.length !== 6) return alert("❌ Enter 6-digit OTP.");
+    setErrorMessage(""); 
+    if (otp.length !== 6) {
+      setErrorMessage("Enter 6-digit OTP.");
+      return;
+    }
     setLoading(true);
+
     try {
-      const res = await axios.post("https://nchsltdadmin.com/wp-json/nchsltd/v1/verify-otp", { email, otp });
+      const res = await axios.post(
+        "https://nchsltdadmin.com/wp-json/nchsltd/v1/verify-otp",
+        { email, otp }
+      );
+      console.log("OTP Verification Response:", res.data);
+
       if (res.data.success) {
         setIsVerified(true);
         localStorage.setItem("emailVerified", "true");
-        setSuccessMessage("✅ Verified! Submitting to CF7...");
-        await submitToCF7(); // send email to Contact Form 7
+        setSuccessMessage("✅ Verified!");
+        await submitToCF7();
       } else {
-        alert(res.data.message);
+        setErrorMessage(res.data.message);
       }
-    } catch {
-      alert("❌ Network error.");
+    } catch (err: unknown) {
+      // Narrow the type to AxiosError
+      if (axios.isAxiosError(err)) {
+        if (err.response && err.response.data) {
+          setErrorMessage(
+            (err.response.data as { message?: string }).message || "Something went wrong."
+          );
+          console.log("Error Response Data:", err.response.data);
+        } else {
+          setErrorMessage("Network error.");
+          console.log("Axios Error:", err.message);
+        }
+      } else {
+        setErrorMessage("An unexpected error occurred.");
+        console.log("Unknown Error:", err);
+      }
     } finally {
       setLoading(false);
     }
   };
+
+
 
   const submitToCF7 = async () => {
     try {
@@ -79,10 +110,10 @@ export default function RestrictedContent({ children }: { children?: React.React
         setSuccessMessage("✅ Email submitted successfully!");
         setTimeout(() => setSuccessMessage(""), 3000);
       } else {
-        alert("❌ CF7 submission failed: " + res.data.message);
+        setErrorMessage("Network Error");
       }
     } catch {
-      alert("❌ CF7 network error.");
+      setErrorMessage("Network Error");
     }
   };
 
@@ -112,6 +143,8 @@ export default function RestrictedContent({ children }: { children?: React.React
               }}
               className="space-y-4"
             >
+              {errorMessage && <div className="text-red-500 text-sm font-medium">{errorMessage}</div>} {/* <-- Show error */}
+
               {step === "email" && (
                 <Input
                   type="email"
