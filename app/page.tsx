@@ -5,7 +5,6 @@ import Commodities from "@/components/commodities";
 import Privacy from "@/components/privacy";
 import ContactForm from "@/components/form/contact";
 import RestrictedContent from "@/components/form/RestrictedContent";
-// To Deploy
 export default function Home() {
   return (
     <>
