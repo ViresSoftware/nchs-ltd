@@ -51,7 +51,6 @@ export default function RestrictedContent({ children }: { children?: React.React
       return;
     }
     setLoading(true);
-
     try {
       const res = await axios.post(
         "https://nchsltdadmin.com/wp-json/nchsltd/v1/verify-otp",
@@ -88,8 +87,6 @@ export default function RestrictedContent({ children }: { children?: React.React
     }
   };
 
-
-
   const submitToCF7 = async () => {
     try {
       const formData = new FormData();
@@ -99,13 +96,11 @@ export default function RestrictedContent({ children }: { children?: React.React
       formData.append("_wpcf7_unit_tag", "wpcf7-f14-o1");
       formData.append("_wpcf7_container_post", "0");
       formData.append("user-email", email); // CF7 field
-
       const res = await axios.post(
         "https://nchsltdadmin.com/wp-json/contact-form-7/v1/contact-forms/55/feedback",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-
       if (res.data.status === "mail_sent") {
         setSuccessMessage("✅ Email submitted successfully!");
         setTimeout(() => setSuccessMessage(""), 3000);
@@ -128,7 +123,7 @@ export default function RestrictedContent({ children }: { children?: React.React
           <div className="max-w-md w-full bg-zinc-900 p-8 rounded-lg border border-zinc-700 shadow-md space-y-4 text-center relative z-10">
             <h2 className="text-xl font-bold">
               <Lock className="h-5 w-5 mr-2 inline" />
-              {step === "email" ? "Restricted Access" : "Enter OTP"}
+              {step === "email" ? "Restricted Access" : "Enter Email Verification Code"}
             </h2>
             <p className="text-sm text-zinc-300">
               {step === "email"
@@ -158,7 +153,7 @@ export default function RestrictedContent({ children }: { children?: React.React
               {step === "otp" && (
                 <Input
                   type="text"
-                  placeholder="OTP Code"
+                  placeholder="Email Verification Code"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
                   className="text-white"
@@ -168,7 +163,7 @@ export default function RestrictedContent({ children }: { children?: React.React
               <button type="submit" className="neon-gold-btn w-full" disabled={loading}>
                 <div className="flex justify-center items-center gap-2">
                   {loading ? (
-                    <>⏳ {step === "email" ? "Sending OTP..." : "Verifying..."}</>
+                    <>⏳ {step === "email" ? "Sending Email Verification Coe..." : "Verifying..."}</>
                   ) : (
                     <>
                       {isVerified ? (
@@ -177,7 +172,7 @@ export default function RestrictedContent({ children }: { children?: React.React
                         <Lock className="h-5 w-5" />
                       )}
                       <p className="text-black">
-                        {step === "email" ? "Send OTP" : "Verify OTP"}
+                        {step === "email" ? "Send Email Verification Code" : "Verify Email Code"}
                       </p>
                     </>
                   )}
