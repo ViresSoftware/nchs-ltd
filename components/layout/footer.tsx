@@ -13,17 +13,18 @@ export default function Footer() {
           </Link>
           <p className="font-playfair text-muted-foreground text-xs mt-[-10px] mx-auto">Established 2020</p>
         </div>
-        <nav className="text-md font-medium text-muted-foreground flex flex-col sm:flex-row sm:gap-6 sm:items-center">
+        <nav className="text-md font-medium text-muted-foreground flex flex-col sm:flex-row sm:gap-6 sm:items-center sm:w-[33%] md:w-[50%]">
           <Link href="/#hero" scroll={true} className="block hover:text-[#b28f3f]">Home</Link>
           <Link href="/about" scroll={true} className="block hover:text-[#b28f3f]">About</Link>
           <Link href="/#commodities" scroll={true} className="block hover:text-[#b28f3f]">Offerings</Link>
           <Link href="/#privacy" scroll={true} className="block hover:text-[#b28f3f]">Protocols</Link>
           <Link href="/#contact" scroll={true} className="block hover:text-[#b28f3f]">Inquiry</Link>
-          <Link href="/client-information-sheet" scroll={true} className="block hover:text-[#b28f3f]">Client Information sheet</Link>
+          <Link href="/client-information-sheet" scroll={true} className="block hover:text-[#b28f3f]">Client Information Sheet</Link>
         </nav>
-        <div className="text-md text-muted-foreground leading-relaxed flex items-center gap-2">
+        <div className="text-md text-muted-foreground leading-relaxed flex items-center gap-2 sm:w-[33%] md:w-[25%]">
           <Building2 size={18} />
-          <p>Cayman Islands</p>
+          {/*<p>Cayman Islands</p>*/}
+          <p>Nevis, West Indies</p>
         </div>
       </div>
       <div className="mt-6 text-center space-y-1 text-xs">

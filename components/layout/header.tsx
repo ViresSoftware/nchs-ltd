@@ -53,7 +53,7 @@ export default function Header() {
     { href: "/#commodities", label: "Offerings" },
     { href: "/#privacy", label: "Protocols" },
     { href: "/#contact", label: "Inquiry" },
-    { href: "/client-information-sheet", label: "Client Information sheet" },
+    { href: "/client-information-sheet", label: "Client Information Sheet" },
   ];
 
   return (
