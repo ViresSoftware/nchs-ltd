@@ -12,7 +12,7 @@ import Step3AuthorizedSignatory from './steps/Step3AuthorizedSignatory'
 import Step4BusinessInfo from './steps/Step4BusinessInfo'
 import Step5Documents from './steps/Step5Documents'
 
-import { schema, FormSchema } from './schema'
+import { formSchema, FormSchema } from "./schema"
 
 const STORAGE_KEY = 'cis_form_data'
 
@@ -25,8 +25,11 @@ export default function CISForm() {
   const storedValues = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null
   const defaultValues = storedValues ? JSON.parse(storedValues) : undefined
 
+  const [entityType, setEntityType] = useState<'Individual' | 'Company'>(
+    defaultValues?.entity_type || 'Individual'
+  )
   const methods = useForm<FormSchema>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(formSchema),
     mode: 'onTouched',
     defaultValues,
   })
@@ -36,34 +39,45 @@ export default function CISForm() {
     trigger,
     watch,
     setValue,
+    reset,
+    setError,     
+    clearErrors,
     formState: { errors },
   } = methods
 
-  const entityType = watch('entity_type')
+  // watch entityType field inside the form
+  const entityTypeValue = watch('entity_type')
 
+  // when the user changes entityType, reset with new schema
   useEffect(() => {
-    setStep(0)
-  }, [entityType])
+    if (entityTypeValue && entityTypeValue !== entityType) {
+      setEntityType(entityTypeValue as 'Individual' | 'Company')
+      reset(methods.getValues())
+      setStep(0)
+    }
+  }, [entityTypeValue])
 
+  // keep saving to localStorage
   useEffect(() => {
     const subscription = watch((value) => {
       if (!submitted) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
       }
     })
-
     unsubscribeRef.current = subscription.unsubscribe
-
     return () => subscription.unsubscribe()
   }, [watch, submitted])
 
-  const fullSteps = useMemo(() => [
-    'Basic Identification',
-    'Contact Information',
-    ...(entityType === 'Individual' ? [] : ['Authorized Signatory']),
-    'Business Info',
-    'Document Uploads',
-  ], [entityType])
+  const fullSteps = useMemo(
+    () => [
+      'Basic Identification',
+      'Contact Information',
+      ...(entityType === 'Individual' ? [] : ['Authorized Signatory']),
+      'Business Info',
+      'Document Uploads',
+    ],
+    [entityType]
+  )
 
   const stepFields = useMemo(() => {
     let i = 0
@@ -78,18 +92,63 @@ export default function CISForm() {
 
   const nextStep = async () => {
     const valid = await trigger(stepFields[step])
-    if (valid) {
-      setMessage('')
-      setStep((s) => s + 1)
+    if (!valid) return
+    if (step === fullSteps.indexOf("Business Info")) {
+      const btc = watch("btc_wallet")?.trim()
+      const erc = watch("erc_20_wallet")?.trim()
+      const trc = watch("trc_20_wallet")?.trim()
+
+      // regex for format checks (simple examples)
+      const btcRegex = /^([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-zA-HJ-NP-Z0-9]{39,59})$/
+      const ethRegex = /^0x[a-fA-F0-9]{40}$/
+      const trcRegex = /^T[a-zA-Z0-9]{33}$/
+
+      let hasAtLeastOne = false
+
+      if (btc) {
+        hasAtLeastOne = true
+        if (!btcRegex.test(btc)) {
+          setError("btc_wallet", { type: "manual", message: "Invalid BTC wallet format" })
+        }
+      } else {
+        clearErrors("btc_wallet")
+      }
+
+      if (erc) {
+        hasAtLeastOne = true
+        if (!ethRegex.test(erc)) {
+          setError("erc_20_wallet", { type: "manual", message: "Invalid ERC-20 wallet format" })
+        }
+      } else {
+        clearErrors("erc_20_wallet")
+      }
+
+      if (trc) {
+        hasAtLeastOne = true
+        if (!trcRegex.test(trc)) {
+          setError("trc_20_wallet", { type: "manual", message: "Invalid TRC-20 wallet format" })
+        }
+      } else {
+        clearErrors("trc_20_wallet")
+      }
+
+      if (!hasAtLeastOne) {
+        // none filled → add manual error to all three
+        setError("btc_wallet", { type: "manual", message: "Fill at least one wallet" })
+        setError("erc_20_wallet", { type: "manual", message: "Fill at least one wallet" })
+        setError("trc_20_wallet", { type: "manual", message: "Fill at least one wallet" })
+        return
+      }
+
+      // stop if any format errors exist
+      const walletErrors = errors.btc_wallet || errors.erc_20_wallet || errors.trc_20_wallet
+      if (walletErrors) return
     }
+
+    setStep((s) => s + 1)
   }
 
-  const stepFieldsFilled =
-    entityType === "Company"
-      ? stepFields[step].every(
-          (field) => watch(field)?.toString().trim() !== ""
-        )
-      : true
+
   const backStep = () => {
     if (step === fullSteps.length - 1) {
       setValue('passport_file', undefined as unknown as File)
@@ -100,7 +159,6 @@ export default function CISForm() {
   }
 
   const onSubmit = async (data: FormSchema) => {
-
     setSubmitting(true)
     setMessage('')
 
@@ -119,16 +177,15 @@ export default function CISForm() {
 
     const formData = new FormData()
 
+    // Add required _wpcf7 hidden fields once
+    formData.append('_wpcf7', '13')
+    formData.append('_wpcf7_version', '5.9.3')
+    formData.append('_wpcf7_locale', 'en_US')
+    formData.append('_wpcf7_unit_tag', 'wpcf7-f13-o1')
+    formData.append('_wpcf7_container_post', '0')
+
     Object.entries(data).forEach(([key, val]) => {
-      // Add required _wpcf7 hidden fields
-      formData.append('_wpcf7', '13')
-      formData.append('_wpcf7_version', '5.9.3')
-      formData.append('_wpcf7_locale', 'en_US')
-      formData.append('_wpcf7_unit_tag', 'wpcf7-f13-o1')
-      formData.append('_wpcf7_container_post', '0')
-
       const fieldKey = key.replace(/_/g, '-')
-
       if (val instanceof File) {
         formData.append(fieldKey, val)
       } else {
@@ -145,7 +202,7 @@ export default function CISForm() {
 
       if (result.status === 'mail_sent') {
         localStorage.removeItem(STORAGE_KEY)
-        setSubmitted(true) // <--- Prevent future localStorage writes
+        setSubmitted(true)
         setMessage('✅ Form submitted successfully!')
         unsubscribeRef.current?.()
       } else {
@@ -158,9 +215,6 @@ export default function CISForm() {
       setSubmitting(false)
     }
   }
-
-  const isBusinessStep =
-    (entityType === 'Individual' && step === 2) || (entityType !== 'Individual' && step === 3)
 
   return (
     <FormProvider {...methods}>
@@ -190,7 +244,6 @@ export default function CISForm() {
             <Button
               type="button"
               onClick={nextStep}
-              disabled={!stepFieldsFilled}
               size="lg"
               variant="outline"
               className={`${step > 0 ? 'flex-1' : 'w-full'} bg-white text-black`}
