@@ -84,6 +84,12 @@ export default function CISForm() {
     }
   }
 
+  const stepFieldsFilled =
+    entityType === "Company"
+      ? stepFields[step].every(
+          (field) => watch(field)?.toString().trim() !== ""
+        )
+      : true
   const backStep = () => {
     if (step === fullSteps.length - 1) {
       setValue('passport_file', undefined as unknown as File)
@@ -184,7 +190,7 @@ export default function CISForm() {
             <Button
               type="button"
               onClick={nextStep}
-              disabled={false}
+              disabled={!stepFieldsFilled}
               size="lg"
               variant="outline"
               className={`${step > 0 ? 'flex-1' : 'w-full'} bg-white text-black`}
