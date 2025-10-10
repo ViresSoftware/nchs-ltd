@@ -6,22 +6,23 @@ import logo from "@/public/logo.png";
 export default function Footer() {
   return (
     <footer className="bg-card py-10 px-4 text-sm">
-      <div className="max-w-6xl grid gap-4 sm:flex mx-auto sm:justify-between mb-10 items-center">
-        <div className="space-y-2 flex flex-col items-center md:items-start">
+      <div className="max-w-7xl gap-4 md:flex mx-auto sm:justify-between md:mb-10 mb-5 items-center">
+        <div className="space-y-2 flex flex-col items-center">
           <Link href="/#hero" scroll={true}>
             <Image src={logo} alt="NCHS LTD Logo" width={130} height={40} priority />
           </Link>
           <p className="font-playfair text-muted-foreground text-xs mt-[-10px] mx-auto">Established 2020</p>
         </div>
-        <nav className="text-md font-medium text-muted-foreground flex flex-col sm:flex-row sm:gap-6 sm:items-center sm:w-[33%] md:w-[50%]">
+        <nav className="flex-wrap justify-center text-md font-medium text-muted-foreground flex flex-col sm:flex-row sm:gap-4 md:items-center md:w-[50%] mt-5">
           <Link href="/#hero" scroll={true} className="block hover:text-[#b28f3f]">Home</Link>
           <Link href="/about" scroll={true} className="block hover:text-[#b28f3f]">About</Link>
           <Link href="/#commodities" scroll={true} className="block hover:text-[#b28f3f]">Offerings</Link>
           <Link href="/#privacy" scroll={true} className="block hover:text-[#b28f3f]">Protocols</Link>
           <Link href="/#contact" scroll={true} className="block hover:text-[#b28f3f]">Inquiry</Link>
           <Link href="/client-information-sheet" scroll={true} className="block hover:text-[#b28f3f]">Client Information Sheet</Link>
+          <Link href="/privacy" scroll={true} className="block hover:text-[#b28f3f]">Privacy</Link>
         </nav>
-        <div className="text-md text-muted-foreground leading-relaxed flex items-center gap-2 sm:w-[33%] md:w-[25%]">
+        <div className="text-md text-muted-foreground leading-relaxed flex items-center gap-2 md:w-[25%] mt-5 justify-center">
           <Building2 size={18} />
           {/*<p>Cayman Islands</p>*/}
           <p>Nevis, West Indies</p>
