@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { Lock, LockOpen } from "lucide-react";
+import logo from "/logo-horizontal.png";
+import Image from "next/image";
 
 export default function RestrictedContent({ children }: { children?: React.ReactNode }) {
   const [email, setEmail] = useState("");
@@ -59,10 +61,12 @@ export default function RestrictedContent({ children }: { children?: React.React
       console.log("OTP Verification Response:", res.data);
 
       if (res.data.success) {
-        setIsVerified(true);
-        localStorage.setItem("emailVerified", "true");
         setSuccessMessage("✅ Verified!");
         await submitToCF7();
+        setTimeout(() => {
+          setIsVerified(true)
+          localStorage.setItem("emailVerified", "true");
+        }, 3000);
       } else {
         setErrorMessage(res.data.message);
       }
@@ -102,7 +106,6 @@ export default function RestrictedContent({ children }: { children?: React.React
         { headers: { "Content-Type": "multipart/form-data" } }
       );
       if (res.data.status === "mail_sent") {
-        setSuccessMessage("✅ Email submitted successfully!");
         setTimeout(() => setSuccessMessage(""), 3000);
       } else {
         setErrorMessage("Network Error");
@@ -117,69 +120,84 @@ export default function RestrictedContent({ children }: { children?: React.React
       <div className={isVerified ? "" : "blur-sm pointer-events-none select-none"}>{children}</div>
       {!isVerified && (
         <div
-          className="fixed inset-0 z-[9999] text-white flex items-center justify-center"
-          style={{ pointerEvents: "auto" }}
+          className="fixed inset-0 z-[9999] flex items-center justify-center"
+          style={{ background: "rgba(0,0,0,0.85)", pointerEvents: "auto" }}
         >
-          <div className="max-w-md w-full bg-zinc-900 p-8 rounded-lg border border-zinc-700 shadow-md space-y-4 text-center relative z-10">
-            <h2 className="text-xl font-bold">
-              <Lock className="h-5 w-5 mr-2 inline" />
-              {step === "email" ? "Restricted Access" : "Enter Email Verification Code"}
-            </h2>
-            <p className="text-sm text-zinc-300">
-              {step === "email"
-                ? "This website content is restricted to legitimate visitors only. Enter a valid email address to receive a verification code."
-                : "Check your email and enter the 6-digit code to access the content."}
-            </p>
+          <div className="bg-[#111]/90 backdrop-blur-xl text-white max-w-lg w-full mx-4 rounded-xl border border-[#222] p-10 shadow-2xl space-y-6 animate-[fadeIn_.4s_ease]">
+            <Image className="mx-auto mb-2" src='/logo.png' alt="logo" width={120} height={30}/>
+            {step === "email" && (
+              <>
+                <h2 className="text-xl font-semibold mb-2">Restricted Access</h2>
+                <p className="text-gray-300 font-light leading-relaxed">
+                  This website content is restricted to legitimate visitors only. Enter a valid email
+                  address to receive a verification code.
+                </p>
+              </>
+            )}
+
+            {step === "otp" && (
+              <>
+                <h2 className="text-xl font-semibold mb-2">
+                  Enter Email Verification Code
+                </h2>
+                <p className="text-gray-300 font-light leading-relaxed">
+                  Check your email and enter the 6-digit code to access the content.
+                </p>
+              </>
+            )}
 
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 step === "email" ? sendOtp() : verifyOtp();
               }}
-              className="space-y-4"
+              className="space-y-6 mt-6"
             >
-              {errorMessage && <div className="text-red-500 text-sm font-medium">{errorMessage}</div>} {/* <-- Show error */}
-
               {step === "email" && (
                 <Input
                   type="email"
                   placeholder="Email Address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="text-white"
+                  className="text-white bg-black/40 border border-[#2e2e2e] py-3 rounded-lg focus:ring-[#20B2AA] focus:border-[#20B2AA]"
                   required
                 />
               )}
               {step === "otp" && (
-                <Input
-                  type="text"
-                  placeholder="Email Verification Code"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  className="text-white"
-                  required
-                />
-              )}
-              <button type="submit" className="neon-gold-btn w-full" disabled={loading}>
-                <div className="flex justify-center items-center gap-2">
-                  {loading ? (
-                    <>⏳ {step === "email" ? "Sending Email Verification Coe..." : "Verifying..."}</>
-                  ) : (
-                    <>
-                      {isVerified ? (
-                        <LockOpen className="h-5 w-5" />
-                      ) : (
-                        <Lock className="h-5 w-5" />
-                      )}
-                      <p className="text-black">
-                        {step === "email" ? "Send Email Verification Code" : "Verify Email Code"}
-                      </p>
-                    </>
-                  )}
+                <div className="border border-[#fcd770]/40 rounded-lg py-2 px-4 text-center text-4xl font-bold tracking-[0.25em] bg-black/40">
+                  <Input
+                    type="text"
+                    placeholder="______"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    className="bg-transparent text-center border-none focus-visible:ring-0 text-4xl"
+                  />
                 </div>
+              )}
+
+              {errorMessage && <div className="text-red-400 text-center">{errorMessage}</div>}
+              {successMessage && <div className="text-green-400 text-center">{successMessage}</div>}
+
+              <button
+                type="submit"
+                className="w-full py-3 neon-gold-btn text-black font-semibold
+                hover:neon-gold-btn hover:text-black transition duration-300 shadow-lg 
+                hover:shadow-[0_0_15px_#20B2AA] !flex items-center justify-center gap-2"
+              >
+                {isVerified ? (
+                  <LockOpen className="h-5 w-5" />
+                ) : (
+                  <Lock className="h-5 w-5" />
+                )}
+                {step === "email" ? "Send Verification Code" : "Verify Code"}
               </button>
-              {successMessage && <div className="text-green-400 text-sm font-medium">{successMessage}</div>}
             </form>
+
+            <p className="text-center text-gray-300 text-sm">This code will expire in 5 minutes.</p>
+            <div className="pt-6 border-t border-[#222] text-center text-gray-500 text-xs">
+              © 2025 NCHS LTD. All rights reserved. <br />
+              This is an automated message, please do not reply.
+            </div>
           </div>
         </div>
       )}
