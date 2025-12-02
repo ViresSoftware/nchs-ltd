@@ -159,7 +159,7 @@ export default function RestrictedContent({ children }: { children?: React.React
                   placeholder="Email Address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="text-white bg-black/40 border border-[#2e2e2e] py-3 rounded-lg focus:ring-[#20B2AA] focus:border-[#20B2AA]"
+                  className="text-white bg-black/40 border border-[#2e2e2e] !py-4 rounded-lg focus:ring-[#20B2AA] focus:border-[#20B2AA] h-auto"
                   required
                 />
               )}
