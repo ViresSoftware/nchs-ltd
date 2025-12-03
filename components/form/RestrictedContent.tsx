@@ -31,7 +31,10 @@ export default function RestrictedContent({ children }: { children?: React.React
     }
     setLoading(true);
     try {
-      const res = await axios.post("https://nchsltdadmin.com/wp-json/nchsltd/v1/email-verification", { email });
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/wp-json/prime-listings/v1/email-verification`,
+        { email }
+      );
       if (res.data.success) {
         setStep("otp");
         setSuccessMessage("✅ Email verification code sent to your email!");
@@ -49,24 +52,21 @@ export default function RestrictedContent({ children }: { children?: React.React
   const verifyOtp = async () => {
     setErrorMessage(""); 
     if (otp.length !== 6) {
-      setErrorMessage("Enter 6-digit OTP.");
+      setErrorMessage("Enter 6-Digit Email Verification Code.");
       return;
     }
     setLoading(true);
     try {
       const res = await axios.post(
-        "https://nchsltdadmin.com/wp-json/nchsltd/v1/verify-otp",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/wp-json/prime-listings/v1/verify-otp`,
         { email, otp }
       );
-      console.log("OTP Verification Response:", res.data);
-
+      console.log("Email Verification Response:", res.data);
       if (res.data.success) {
+        setIsVerified(true);
+        localStorage.setItem("emailVerified", "true");
         setSuccessMessage("✅ Verified!");
         await submitToCF7();
-        setTimeout(() => {
-          setIsVerified(true)
-          localStorage.setItem("emailVerified", "true");
-        }, 3000);
       } else {
         setErrorMessage(res.data.message);
       }
