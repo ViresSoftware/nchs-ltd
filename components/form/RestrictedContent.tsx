@@ -34,7 +34,7 @@ export default function RestrictedContent({ children }: { children?: React.React
       const res = await axios.post("https://nchsltdadmin.com/wp-json/nchsltd/v1/email-verification", { email });
       if (res.data.success) {
         setStep("otp");
-        setSuccessMessage("✅ OTP sent to your email!");
+        setSuccessMessage("✅ Email verification code sent to your email!");
         setTimeout(() => setSuccessMessage(""), 3000);
       } else {
         setErrorMessage(`${res.data.message}`);
