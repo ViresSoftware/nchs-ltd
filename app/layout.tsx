@@ -3,7 +3,7 @@ import Header from "@/components/layout/header";
 import "./globals.css";
 import Footer from "@/components/layout/footer";
 import { Inter, Playfair_Display } from "next/font/google";
-import { RestrictionProvider } from "@/context/RestrictionContext";
+// import { RestrictionProvider } from "@/context/RestrictionContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -39,11 +39,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('config', 'G-VCKJB3J6F0');
           `}
         </Script>
-        <RestrictionProvider>
+        {/* <RestrictionProvider> */}
           <Header />
           <main className="font-inter">{children}</main>
           <Footer />
-        </RestrictionProvider>
+        {/* </RestrictionProvider> */}
       </body>
     </html>
   );
